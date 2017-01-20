@@ -1,0 +1,223 @@
+/****************************************************************************
+ **
+ ** Copyright (C) Qxt Foundation. Some rights reserved.
+ **
+ ** This file is part of the QxtGui module of the Qxt library.
+ **
+ ** This library is free software; you can redistribute it and/or modify it
+ ** under the terms of the Common Public License, version 1.0, as published
+ ** by IBM, and/or under the terms of the GNU Lesser General Public License,
+ ** version 2.1, as published by the Free Software Foundation.
+ **
+ ** This file is provided "AS IS", without WARRANTIES OR CONDITIONS OF ANY
+ ** KIND, EITHER EXPRESS OR IMPLIED INCLUDING, WITHOUT LIMITATION, ANY
+ ** WARRANTIES OR CONDITIONS OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR
+ ** FITNESS FOR A PARTICULAR PURPOSE.
+ **
+ ** You should have received a copy of the CPL and the LGPL along with this
+ ** file. See the LICENSE file and the cpl1.0.txt/lgpl-2.1.txt files
+ ** included with the source distribution for more information.
+ ** If you did not receive a copy of the licenses, contact the Qxt Foundation.
+ **
+ ** <http://libqxt.org>  <foundation@libqxt.org>
+ **
+ ****************************************************************************/
+#include "qxtglobalshortcut.h"
+#include "qxtglobalshortcut_p.h"
+#include <QAbstractEventDispatcher>
+#include <QtDebug>
+///#include <QApplication>
+
+bool QxtGlobalShortcutPrivate::error = false;
+int QxtGlobalShortcutPrivate::ref = 0;
+bool QxtGlobalShortcutPrivate::eventFilterInstalled = false;
+//QHash<QPair<quint32, quint32>, QxtGlobalShortcut*> QxtGlobalShortcutPrivate::shortcuts;
+
+QxtGlobalShortcutPrivateNativeEventFilter QxtGlobalShortcutPrivate::event_filter;
+
+QxtGlobalShortcutPrivate::QxtGlobalShortcutPrivate() : enabled(true), isGlobal(true), key(Qt::Key(0)), mods(Qt::NoModifier)
+{
+    if(!eventFilterInstalled){
+        QAbstractEventDispatcher::instance()->installNativeEventFilter(&event_filter);
+        eventFilterInstalled = true;
+    }
+}
+
+QxtGlobalShortcutPrivate::~QxtGlobalShortcutPrivate()
+{
+}
+
+bool QxtGlobalShortcutPrivate::setShortcut(const QKeySequence& shortcut)
+{
+    Qt::KeyboardModifiers allMods = Qt::ShiftModifier | Qt::ControlModifier | Qt::AltModifier | Qt::MetaModifier;
+    key = shortcut.isEmpty() ? Qt::Key(0) : Qt::Key((shortcut[0] ^ allMods) & shortcut[0]);
+    mods = shortcut.isEmpty() ? Qt::KeyboardModifiers(0) : Qt::KeyboardModifiers(shortcut[0] & allMods);
+    const quint32 nativeKey = nativeKeycode(key);
+    const quint32 nativeMods = nativeModifiers(mods);
+    const bool res = registerShortcut(nativeKey, nativeMods);
+
+    event_filter.shortcuts.insert(qMakePair(nativeKey, nativeMods), &qxt_p());
+    if (!res)
+        qWarning() << "QxtGlobalShortcut failed to register:" << QKeySequence(key + mods).toString();
+    return res;
+}
+
+bool QxtGlobalShortcutPrivate::unsetShortcut()
+{
+    const quint32 nativeKey = nativeKeycode(key);
+    const quint32 nativeMods = nativeModifiers(mods);
+    const bool res = unregisterShortcut(nativeKey, nativeMods);
+    event_filter.shortcuts.remove(qMakePair(nativeKey, nativeMods));
+    if (!res)
+        qWarning() << "QxtGlobalShortcut failed to unregister:" << QKeySequence(key + mods).toString();
+    key = Qt::Key(0);
+    mods = Qt::KeyboardModifiers(0);
+    return res;
+}
+
+
+void QxtGlobalShortcutPrivateNativeEventFilter::activateShortcut(quint32 nativeKey, quint32 nativeMods){
+    QxtGlobalShortcut* shortcut = shortcuts.value(qMakePair(nativeKey, nativeMods));
+    if (shortcut && shortcut->isEnabled() )
+//    if (shortcut && shortcut->isEnabled() && (shortcut->isGlobal() || QApplication::activeWindow() ))
+		emit shortcut->activated();
+}
+/*
+void QxtGlobalShortcutPrivate::activateShortcut(quint32 nativeKey, quint32 nativeMods)
+{
+    QxtGlobalShortcut* shortcut = event_filter.shortcuts.value(qMakePair(nativeKey, nativeMods));
+    if (shortcut && shortcut->isEnabled() && (shortcut->isGlobal() || QApplication::activeWindow() ))
+        emit shortcut->activated();
+}
+*/
+/*!
+    \class QxtGlobalShortcut
+    \inmodule QxtGui
+    \brief The QxtGlobalShortcut class provides a global shortcut aka "hotkey".
+
+    A global shortcut triggers even if the application is not active. This
+    makes it easy to implement applications that react to certain shortcuts
+    still if some other application is active or if the application is for
+    example minimized to the system tray.
+
+    Example usage:
+    \code
+    QxtGlobalShortcut* shortcut = new QxtGlobalShortcut(window);
+    connect(shortcut, SIGNAL(activated()), window, SLOT(toggleVisibility()));
+    shortcut->setShortcut(QKeySequence("Ctrl+Shift+F12"));
+    \endcode
+
+    \bold {Note:} Since Qxt 0.6 QxtGlobalShortcut no more requires QxtApplication.
+ */
+
+/*!
+    \fn QxtGlobalShortcut::activated()
+
+    This signal is emitted when the user types the shortcut's key sequence.
+
+    \sa shortcut
+ */
+
+/*!
+    Constructs a new QxtGlobalShortcut with \a parent.
+ */
+QxtGlobalShortcut::QxtGlobalShortcut(QObject* parent)
+        : QObject(parent)
+{
+    QXT_INIT_PRIVATE(QxtGlobalShortcut);
+}
+
+/*!
+    Constructs a new QxtGlobalShortcut with \a shortcut and \a parent.
+ */
+QxtGlobalShortcut::QxtGlobalShortcut(const QKeySequence& shortcut, QObject* parent)
+        : QObject(parent)
+{
+    QXT_INIT_PRIVATE(QxtGlobalShortcut);
+    setShortcut(shortcut);
+}
+
+/*!
+    Destructs the QxtGlobalShortcut.
+ */
+QxtGlobalShortcut::~QxtGlobalShortcut()
+{
+    if (qxt_d().key != 0)
+        qxt_d().unsetShortcut();
+}
+
+/*!
+    \property QxtGlobalShortcut::shortcut
+    \brief the shortcut key sequence
+
+    \bold {Note:} Notice that corresponding key press and release events are not
+    delivered for registered global shortcuts even if they are disabled.
+    Also, comma separated key sequences are not supported.
+    Only the first part is used:
+
+    \code
+    qxtShortcut->setShortcut(QKeySequence("Ctrl+Alt+A,Ctrl+Alt+B"));
+    Q_ASSERT(qxtShortcut->shortcut() == QKeySequence("Ctrl+Alt+A"));
+    \endcode
+ */
+QKeySequence QxtGlobalShortcut::shortcut() const
+{
+    return QKeySequence(qxt_d().key | qxt_d().mods);
+}
+
+bool QxtGlobalShortcut::setShortcut(const QKeySequence& shortcut)
+{
+    if (qxt_d().key != 0)
+        qxt_d().unsetShortcut();
+    return qxt_d().setShortcut(shortcut);
+}
+
+/*!
+    \property QxtGlobalShortcut::enabled
+    \brief whether the shortcut is enabled
+
+    A disabled shortcut does not get activated.
+
+    The default value is \c true.
+
+    \sa setDisabled()
+ */
+bool QxtGlobalShortcut::isEnabled() const
+{
+    return qxt_d().enabled;
+}
+
+void QxtGlobalShortcut::setEnabled(bool enabled)
+{
+    qxt_d().enabled = enabled;
+}
+/*!
+    \property QxtGlobalShortcut::isGlobal
+    \brief whether the shortcut is isGlobal
+
+    A global shortcut will get activated even if the application has no active window.
+
+    The default value is \c true.
+
+	Currently this property is useless
+
+    \sa setIsGlobal()
+ */
+bool QxtGlobalShortcut::isGlobal() const
+{
+    return qxt_d().isGlobal;
+}
+
+void QxtGlobalShortcut::setGlobal(bool is_global)
+{
+    qxt_d().isGlobal = is_global;
+}
+/*!
+    Sets the shortcut \a disabled.
+
+    \sa enabled
+ */
+void QxtGlobalShortcut::setDisabled(bool disabled)
+{
+    qxt_d().enabled = !disabled;
+}
