@@ -23,6 +23,9 @@
  **
  ****************************************************************************/
 #include "qxttemporarydir_p.h"
+
+#define UNICODE
+
 #include <qt_windows.h>
 
 QString QxtTemporaryDirPrivate::create()
