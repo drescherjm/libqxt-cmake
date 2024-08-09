@@ -1,6 +1,8 @@
 
 # Qxt Core 
 
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Gui)
+
 set(QXT_MOD Core)
 STRING(TOUPPER ${QXT_MOD} U_MOD)
 
@@ -15,7 +17,7 @@ target_compile_definitions(${LOCAL_TARGET_NAME} PRIVATE -DBUILD_QXT_${U_MOD})
 
 setup_naming_convention(${LOCAL_TARGET_NAME})
 	 
-target_link_libraries(${LOCAL_TARGET_NAME}  PUBLIC Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Gui )	
+target_link_libraries(${LOCAL_TARGET_NAME}  PUBLIC Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Gui)	
 
 target_include_directories(${LOCAL_TARGET_NAME} PUBLIC
 	$<INSTALL_INTERFACE:Include> 

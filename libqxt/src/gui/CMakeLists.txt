@@ -1,15 +1,11 @@
 
 # Qxt Gui 
 
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Gui Widgets)
+
 set(QXT_MOD Gui)
 STRING(TOUPPER ${QXT_MOD} U_MOD)
 
-#find_library(my_lib_name QxtCore PATHS ${CMAKE_CURRENT_SOURCE_DIR}/../../lib/ NO_DEFAULT_PATH)
-#set(QXT_CORE_LIB  ${my_lib_name})
-#unset(my_lib_name CACHE)
-
-#set(QXT_LIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../lib)
-#set(QXT_CORE_LIB debug ${QXT_LIB_PATH}/QxtCored.lib optimized ${QXT_LIB_PATH}/QxtCore.lib)
 include(files.cmake)
 		
 set(LOCAL_TARGET_NAME Qxt${QXT_MOD})
