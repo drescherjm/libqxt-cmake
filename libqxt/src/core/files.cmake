@@ -115,10 +115,7 @@ set(qxt_sources
 		
 		qxtglobalshortcut.cpp
 		)
-		
-		
-		
-		
+	
 if(WIN32)
 	set(qxt_sources ${qxt_sources}
 			qxtfilelock_win.cpp
