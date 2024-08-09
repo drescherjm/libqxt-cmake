@@ -40,6 +40,15 @@
 
 #include "qxtscheduleheaderwidget.h"
 
+/* 2024/08/09: link error on old versions of Qt
+* See: https://bugreports.qt.io/browse/QTBUG-81727 and the fix at
+* https://codereview.qt-project.org/c/qt/qtbase/+/288474/3/src/corelib/tools/qlinkedlist.h#68 
+*/
+
+#if (QT_VERSION < QT_VERSION_CHECK(5, 13, 0)) && (_MSC_VER > 1920)
+#pragma message("If building this file causes a linker error with QLinkedListData see QTBUG-81727 for the work around code to add to qlinkedlist.h.")
+#endif //dev
+
 /*-------------------------------------start private functions-------------------------------------------------------*/
 
 int QxtScheduleViewPrivate::offsetToVisualColumn(const int iOffset) const

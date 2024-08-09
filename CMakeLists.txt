@@ -14,26 +14,29 @@ endif()
 
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Gui Widgets)
 
-#INCLUDE_DIRECTORIES(${QT_INCLUDE_DIR})
-
-# set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/libqxt/lib)
-# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/libqxt/lib)
-
-# set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/libqxt/lib)
-# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/libqxt/lib)
-
 SET (LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin CACHE INTERNAL "Single output directory for building all libraries.")
 SET (EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin CACHE INTERNAL "Single output directory for building all executables.")
 SET (EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin CACHE INTERNAL "Single output directory for building all executables.")
 
+macro( setup_naming_convention TargetName )
+	set_target_properties(${TargetName} PROPERTIES DEBUG_POSTFIX d)		
+	set_target_properties(${TargetName} PROPERTIES RELWITHDEBINFO_POSTFIX rd)	
+	set_target_properties(${TargetName} PROPERTIES MINSIZEREL_POSTFIX rms)
+endmacro()
+
 add_subdirectory( ${CMAKE_SOURCE_DIR}/libqxt/src/core/  ${CMAKE_BINARY_DIR}/qxt-core )
 
-
-#add_subdirectory( ${CMAKE_SOURCE_DIR}/libqxt/src/gui/  ${CMAKE_BINARY_DIR}/qxt-gui )
-#add_dependencies(QxtGui QxtCore)
+add_subdirectory( ${CMAKE_SOURCE_DIR}/libqxt/src/gui/  ${CMAKE_BINARY_DIR}/qxt-gui )
+add_dependencies(QxtGui QxtCore)
 
 #add_subdirectory( ${CMAKE_SOURCE_DIR}/libqxt/src/sql/  ${CMAKE_BINARY_DIR}/qxt-sql )
 #add_dependencies(QxtSql QxtCore)
 
 #add_subdirectory( ${CMAKE_SOURCE_DIR}/libqxt/src/network/  ${CMAKE_BINARY_DIR}/qxt-network )
 #add_dependencies(QxtNetwork QxtCore)
+
+install(EXPORT ${PROJECT_NAME}Targets
+        FILE ${PROJECT_NAME}.cmake
+        NAMESPACE Qxt::
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/cmake/libqxt
+)
