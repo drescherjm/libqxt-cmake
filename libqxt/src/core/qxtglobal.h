@@ -39,7 +39,6 @@ namespace Qt
 	static auto endl = ::endl;
 	static auto SkipEmptyParts = QString::SkipEmptyParts;
 }
-#elseif QT_VERSION > QT_VERSION_CHECK(5,15,0)
 #else
 template <typename T>
 inline QVariant qVariantFromValue(const T& t)
