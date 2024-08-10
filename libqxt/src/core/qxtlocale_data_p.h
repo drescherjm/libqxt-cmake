@@ -936,173 +936,173 @@ static const char* currency_names[] = {
 static QChar symbol_for_country_list[][5] =
 {
 {  }, // NoCurrency
-{ 1,0x60b }, // Afghani
+{ QChar{1U},QChar{0x60b} }, // Afghani
 {  }, // AlgerianDinar
-{ 1,0x24 }, // ArgentinePeso
+{ QChar{1},QChar{0x24} }, // ArgentinePeso
 {  }, // ArmenianDram
-{ 1,0x192 }, // ArubanGuilder
-{ 1,0x24 }, // AustralianDollar
-{ 3,0x43c,0x430,0x43d }, // AzerbaijanianManat
-{ 1,0x24 }, // BahamianDollar
+{ QChar{1},QChar{0x192} }, // ArubanGuilder
+{ QChar{1},QChar{0x24} }, // AustralianDollar
+{ QChar{3},QChar{0x43c},QChar{0x430},QChar{0x43d} }, // AzerbaijanianManat
+{ QChar{1},QChar{0x24} }, // BahamianDollar
 {  }, // BahrainiDinar
-{ 1,0xe3f }, // Baht
-{ 3,0x42,0x2f,0x2e }, // Balboa
-{ 1,0x24 }, // BarbadosDollar
-{ 2,0x70,0x2e }, // BelarussianRuble
-{ 3,0x42,0x5a,0x24 }, // BelizeDollar
-{ 1,0x24 }, // BermudianDollar
-{ 2,0x42,0x73 }, // BolivarFuerte
-{ 2,0x24,0x62 }, // Boliviano
-{ 2,0x52,0x24 }, // BrazilianReal
-{ 1,0x24 }, // BruneiDollar
-{ 2,0x43b,0x432 }, // BulgarianLev
+{ QChar{1},QChar{0xe3f} }, // Baht
+{ QChar{3},QChar{0x42},QChar{0x2f},QChar{0x2e} }, // Balboa
+{ QChar{1},QChar{0x24} }, // BarbadosDollar
+{ QChar{2},QChar{0x70},QChar{0x2e}}, // BelarussianRuble
+{ QChar{3},QChar{0x42},QChar{0x5a},QChar{0x24}}, // BelizeDollar
+{ QChar{1},QChar{0x24}}, // BermudianDollar
+{ QChar{2},QChar{0x42},QChar{0x73} }, // BolivarFuerte
+{ QChar{2},QChar{0x24},QChar{0x62} }, // Boliviano
+{ QChar{2},QChar{0x52},QChar{0x24}}, // BrazilianReal
+{ QChar{1},QChar{0x24}}, // BruneiDollar
+{ QChar{2},QChar{0x43b},QChar{0x432} }, // BulgarianLev
 {  }, // BurundiFranc
 {  }, // CFAFrancBCEAO
 {  }, // CFAFrancBEAC
 {  }, // CFPFranc
-{ 1,0x24 }, // CanadianDollar
+{ QChar{1},QChar{0x24} }, // CanadianDollar
 {  }, // CapeVerdeEscudo
-{ 1,0x24 }, // CaymanIslandsDollar
-{ 1,0x24 }, // ChileanPeso
-{ 1,0x24 }, // ColombianPeso
+{ QChar{1},QChar{0x24} }, // CaymanIslandsDollar
+{ QChar{1},QChar{0x24} }, // ChileanPeso
+{ QChar{1},QChar{0x24} }, // ColombianPeso
 {  }, // ComoroFranc
-{ 2,0x4b,0x4d }, // ConvertibleMarks
-{ 2,0x43,0x24 }, // CordobaOro
-{ 1,0x20a1 }, // CostaRicanColon
-{ 2,0x6b,0x6e }, // CroatianKuna
-{ 1,0x20b1 }, // CubanPeso
+{ QChar{2},QChar{0x4b},QChar{0x4d} }, // ConvertibleMarks
+{ QChar{2},QChar{0x43},QChar{0x24}}, // CordobaOro
+{ QChar{1},QChar{0x20a1} }, // CostaRicanColon
+{ QChar{2},QChar{0x6b},QChar{0x6e} }, // CroatianKuna
+{ QChar{1},QChar{0x20b1} }, // CubanPeso
 {  }, // CyprusPound
-{ 2,0x4b,0x10d }, // CzechKoruna
+{ QChar{2},QChar{0x4b},QChar{0x10d} }, // CzechKoruna
 {  }, // Dalasi
-{ 2,0x6b,0x72 }, // DanishKrone
-{ 3,0x434,0x435,0x43d }, // Denar
+{ QChar{2},QChar{0x6b},QChar{0x72} }, // DanishKrone
+{ QChar{3},QChar{0x434},QChar{0x435},QChar{0x43d} }, // Denar
 {  }, // DjiboutiFranc
 {  }, // Dobra
-{ 3,0x52,0x44,0x24 }, // DominicanPeso
-{ 1,0x20ab }, // Dong
-{ 1,0x24 }, // EastCaribbeanDollar
-{ 1,0xa3 }, // EgyptianPound
-{ 1,0x24 }, // ElSalvadorColon
+{ QChar{3},QChar{0x52},QChar{0x44},QChar{0x24} }, // DominicanPeso
+{ QChar{1},QChar{0x20ab} }, // Dong
+{ QChar{1},QChar{0x24} }, // EastCaribbeanDollar
+{ QChar{1},QChar{0xa3} }, // EgyptianPound
+{ QChar{1},QChar{0x24} }, // ElSalvadorColon
 {  }, // EthiopianBirr
-{ 1,0x20ac }, // Euro
-{ 1,0xa3 }, // FalklandIslandsPound
-{ 1,0x24 }, // FijiDollar
-{ 2,0x46,0x74 }, // Forint
+{ QChar{1},QChar{0x20ac} }, // Euro
+{ QChar{1},QChar{0xa3} }, // FalklandIslandsPound
+{ QChar{1},QChar{0x24} }, // FijiDollar
+{ QChar{2},QChar{0x46},QChar{0x74} }, // Forint
 {  }, // FrancCongolais
 {  }, // GhanaCedi
-{ 1,0xa3 }, // GibraltarPound
+{ QChar{1},QChar{0xa3} }, // GibraltarPound
 {  }, // Gourde
-{ 2,0x47,0x73 }, // Guarani
+{ QChar{2},QChar{0x47},QChar{0x73} }, // Guarani
 {  }, // GuineaBissauPeso
 {  }, // GuineaFranc
-{ 1,0x24 }, // GuyanaDollar
-{ 1,0x5143 }, // HongKongDollar
-{ 1,0x20b4 }, // Hryvnia
-{ 2,0x6b,0x72 }, // IcelandKrona
-{ 1,0x20a8 }, // IndianRupee
-{ 1,0xfdfc }, // IranianRial
+{ QChar{1},QChar{0x24}}, // GuyanaDollar
+{ QChar{1},QChar{0x5143} }, // HongKongDollar
+{ QChar{1},QChar{0x20b4} }, // Hryvnia
+{ QChar{2},QChar{0x6b},QChar{0x72} }, // IcelandKrona
+{ QChar{1},QChar{0x20a8} }, // IndianRupee
+{ QChar{1},QChar{0xfdfc} }, // IranianRial
 {  }, // IraqiDinar
-{ 2,0x4a,0x24 }, // JamaicanDollar
+{ QChar{2},QChar{0x4a},QChar{0x24}}, // JamaicanDollar
 {  }, // JordanianDinar
 {  }, // KenyanShilling
 {  }, // Kina
-{ 1,0x20ad }, // Kip
-{ 2,0x6b,0x72 }, // Kroon
+{ QChar{1},QChar{0x20ad} }, // Kip
+{ QChar{2},QChar{0x6b},QChar{0x72} }, // Kroon
 {  }, // KuwaitiDinar
 {  }, // Kwanza
 {  }, // Kyat
 {  }, // Lari
-{ 2,0x4c,0x73 }, // LatvianLats
-{ 1,0xa3 }, // LebanesePound
-{ 3,0x4c,0x65,0x6b }, // Lek
-{ 1,0x4c }, // Lempira
+{ QChar{2},QChar{0x4c},QChar{0x73} }, // LatvianLats
+{ QChar{1},QChar{0xa3} }, // LebanesePound
+{ QChar{3},QChar{0x4c},QChar{0x65},QChar{0x6b} }, // Lek
+{ QChar{1},QChar{0x4c} }, // Lempira
 {  }, // Leone
-{ 1,0x24 }, // LiberianDollar
+{ QChar{1},QChar{0x24}}, // LiberianDollar
 {  }, // LibyanDinar
 {  }, // Lilangeni
-{ 2,0x4c,0x74 }, // LithuanianLitas
+{ QChar{2},QChar{0x4c},QChar{0x74} }, // LithuanianLitas
 {  }, // Loti
 {  }, // MalagasyAriary
 {  }, // MalawiKwacha
-{ 2,0x52,0x4d }, // MalaysianRinggit
+{ QChar{2},QChar{0x52},QChar{0x4d} }, // MalaysianRinggit
 {  }, // MalteseLira
 {  }, // Manat
-{ 1,0x20a8 }, // MauritiusRupee
-{ 2,0x4d,0x54 }, // Metical
-{ 1,0x24 }, // MexicanPeso
+{ QChar{1},QChar{0x20a8} }, // MauritiusRupee
+{ QChar{2},QChar{0x4d},QChar{0x54} }, // Metical
+{ QChar{1},QChar{0x24} }, // MexicanPeso
 {  }, // MexicanUnidadDeInversion
 {  }, // MoldovanLeu
 {  }, // MoroccanDirham
 {  }, // Mvdol
-{ 1,0x20a6 }, // Naira
+{ QChar{1},QChar{0x20a6} }, // Naira
 {  }, // Nakfa
-{ 1,0x24 }, // NamibiaDollar
-{ 1,0x20a8 }, // NepaleseRupee
-{ 1,0x192 }, // NetherlandsAntillianGuilder
-{ 1,0x20aa }, // NewIsraeliSheqel
-{ 3,0x6c,0x65,0x69 }, // NewLeu
-{ 3,0x4e,0x54,0x24 }, // NewTaiwanDollar
-{ 3,0x59,0x54,0x4c }, // NewTurkishLira
-{ 1,0x24 }, // NewZealandDollar
+{ QChar{1},QChar{0x24}}, // NamibiaDollar
+{ QChar{1},QChar{0x20a8} }, // NepaleseRupee
+{ QChar{1},QChar{0x192} }, // NetherlandsAntillianGuilder
+{ QChar{1},QChar{0x20aa} }, // NewIsraeliSheqel
+{ QChar{3} ,QChar{0x6c},QChar{0x65},QChar{0x69} }, // NewLeu
+{ QChar{3} ,QChar{0x4e},QChar{0x54},QChar{0x24} }, // NewTaiwanDollar
+{ QChar{3} ,QChar{0x59},QChar{0x54},QChar{0x4c} }, // NewTurkishLira
+{ QChar{1},QChar{0x24}}, // NewZealandDollar
 {  }, // Ngultrum
-{ 1,0x20a9 }, // NorthKoreanWon
-{ 2,0x6b,0x72 }, // NorwegianKrone
-{ 3,0x53,0x2f,0x2e }, // NuevoSol
+{ QChar{1},QChar{0x20a9} }, // NorthKoreanWon
+{ QChar{2},QChar{0x6b},QChar{0x72} }, // NorwegianKrone
+{ QChar{3},QChar{0x53},QChar{0x2f},QChar{0x2e} }, // NuevoSol
 {  }, // Ouguiya
 {  }, // Paanga
-{ 1,0x20a8 }, // PakistanRupee
+{ QChar{1},QChar{0x20a8} }, // PakistanRupee
 {  }, // Pataca
-{ 2,0x24,0x55 }, // PesoUruguayo
-{ 3,0x50,0x68,0x70 }, // PhilippinePeso
-{ 1,0xa3 }, // PoundSterling
-{ 1,0x50 }, // Pula
-{ 1,0xfdfc }, // QatariRial
-{ 1,0x51 }, // Quetzal
-{ 1,0x52 }, // Rand
-{ 1,0xfdfc }, // RialOmani
-{ 1,0x17db }, // Riel
+{ QChar{2},QChar{0x24},QChar{0x55} }, // PesoUruguayo
+{ QChar{3},QChar{0x50},QChar{0x68},QChar{0x70} }, // PhilippinePeso
+{ QChar{1},QChar{0xa3} }, // PoundSterling
+{ QChar{1},QChar{0x50} }, // Pula
+{ QChar{1},QChar{0xfdfc} }, // QatariRial
+{ QChar{1},QChar{0x51} }, // Quetzal
+{ QChar{1},QChar{0x52} }, // Rand
+{ QChar{1},QChar{0xfdfc} }, // RialOmani
+{ QChar{1},QChar{0x17db} }, // Riel
 {  }, // Rufiyaa
-{ 2,0x52,0x7 }, // Rupiah
-{ 3,0x440,0x443,0x431 }, // RussianRuble
+{ QChar{2},QChar{0x52},QChar{0x7} }, // Rupiah
+{ QChar{3},QChar{0x440},QChar{0x443},QChar{0x431} }, // RussianRuble
 {  }, // RwandaFranc
-{ 1,0xa3 }, // SaintHelenaPound
-{ 1,0xfdfc }, // SaudiRiyal
-{ 4,0x414,0x438,0x43d,0x2e }, // SerbianDinar
-{ 1,0x20a8 }, // SeychellesRupee
-{ 1,0x24 }, // SingaporeDollar
+{ QChar{1},QChar{0xa3} }, // SaintHelenaPound
+{ QChar{1},QChar{0xfdfc} }, // SaudiRiyal
+{ QChar{4},QChar{0x414},QChar{0x438},QChar{0x43d},QChar{0x2e} }, // SerbianDinar
+{ QChar{1},QChar{0x20a8} }, // SeychellesRupee
+{ QChar{1},QChar{0x24}}, // SingaporeDollar
 {  }, // SlovakKoruna
-{ 1,0x24 }, // SolomonIslandsDollar
-{ 2,0x43b,0x432 }, // Som
-{ 1,0x53 }, // SomaliShilling
+{ QChar{1},QChar{0x24}}, // SolomonIslandsDollar
+{ QChar{2},QChar{0x43b},QChar{0x432} }, // Som
+{ QChar{1},QChar{0x53} }, // SomaliShilling
 {  }, // Somoni
-{ 1,0x20a8 }, // SriLankaRupee
+{ QChar{1},QChar{0x20a8} }, // SriLankaRupee
 {  }, // SudanesePound
-{ 1,0x24 }, // SurinamDollar
-{ 2,0x6b,0x72 }, // SwedishKrona
-{ 3,0x43,0x48,0x46 }, // SwissFranc
-{ 1,0xa3 }, // SyrianPound
+{ QChar{1},QChar{0x24}}, // SurinamDollar
+{ QChar{2},QChar{0x6b},QChar{0x72} }, // SwedishKrona
+{ QChar{3},QChar{0x43},QChar{0x48},QChar{0x46} }, // SwissFranc
+{ QChar{1},QChar{0xa3} }, // SyrianPound
 {  }, // Taka
 {  }, // Tala
 {  }, // TanzanianShilling
-{ 2,0x43b,0x432 }, // Tenge
-{ 3,0x54,0x54,0x24 }, // TrinidadAndTobagoDollar
-{ 1,0x20ae }, // Tugrik
+{ QChar{2},QChar{0x43b},QChar{0x432} }, // Tenge
+{ QChar{3},QChar{0x54},QChar{0x54},QChar{0x24} }, // TrinidadAndTobagoDollar
+{ QChar{1},QChar{0x20ae} }, // Tugrik
 {  }, // TunisianDinar
-{ 1,0x62c }, // UAEDirham
-{ 1,0x24 }, // USDollar
+{ QChar{1},QChar{0x62c} }, // UAEDirham
+{ QChar{1},QChar{0x24}}, // USDollar
 {  }, // UgandaShilling
 {  }, // UnidadDeValorReal
 {  }, // UnidadesDeFomento
 {  }, // UruguayPesoEnUnidadesIndexadas
-{ 2,0x43b,0x432 }, // UzbekistanSum
+{ QChar{2},QChar{0x43b},QChar{0x432} }, // UzbekistanSum
 {  }, // Vatu
-{ 1,0x20a9 }, // Won
-{ 1,0xfdfc }, // YemeniRial
-{ 1,0xa5 }, // Yen
-{ 1,0x5143 }, // YuanRenminbi
+{ QChar{1},QChar{0x20a9} }, // Won
+{ QChar{1},QChar{0xfdfc} }, // YemeniRial
+{ QChar{1},QChar{0xa5} }, // Yen
+{ QChar{1},QChar{0x5143} }, // YuanRenminbi
 {  }, // ZambiaKwacha
-{ 2,0x5a,0x24 }, // ZimbabweDollar
-{ 2,0x7a,0x142 }, // Zloty
+{ QChar{2},QChar{0x5a},QChar{0x24}}, // ZimbabweDollar
+{ QChar{2},QChar{0x7a},QChar{0x142} }, // Zloty
 }
 ;
 static const unsigned char currency_code_list[] = 

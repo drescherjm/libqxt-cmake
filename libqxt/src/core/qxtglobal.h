@@ -28,6 +28,7 @@
 
 #include <QtGlobal>
 #include <QTextStream>
+#include <QVariant>
 
 // Version Compatibility
 // This part of the code was taken from: https://github.com/AD-Vega/qarv/issues/22#issuecomment-1012011346
@@ -37,6 +38,13 @@ namespace Qt
     static auto flush = ::flush;
 	static auto endl = ::endl;
 	static auto SkipEmptyParts = QString::SkipEmptyParts;
+}
+#elseif QT_VERSION > QT_VERSION_CHECK(5,15,0)
+#else
+template <typename T>
+inline QVariant qVariantFromValue(const T& t)
+{
+	return QVariant(qMetaTypeId<T>(), &t, QTypeInfo<T>::isPointer);
 }
 #endif
 

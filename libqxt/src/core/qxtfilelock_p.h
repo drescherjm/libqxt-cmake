@@ -28,7 +28,6 @@
 
 #include <QMutex>
 #include <QMutexLocker>
-#include <QLinkedList>
 #include <QPointer>
 
 class QxtFileLock;

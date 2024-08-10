@@ -39,6 +39,7 @@
 #include <QString>
 #include <QByteArray>
 #include <QPair>
+#include <QVariant>
 
 static bool qxt_rpcservice_debug = false;
 

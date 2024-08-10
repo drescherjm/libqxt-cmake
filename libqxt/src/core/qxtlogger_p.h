@@ -29,6 +29,10 @@
 #include "qxtlogger.h"
 #include <QHash>
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+#include <QRecursiveMutex>
+#endif
+
 /*******************************************************************************
     QxtLoggerPrivate
     This is the d_ptr private class containing the actual data this library
@@ -44,7 +48,12 @@ public:
     ~QxtLoggerPrivate();
     void setQxtLoggerEngineMinimumLevel(QxtLoggerEngine *engine, QxtLogger::LogLevel level);
     QHash<QString, QxtLoggerEngine*> map_logEngineMap;
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
     QMutex* mut_lock;
+#else
+    QRecursiveMutex* mut_lock;
+#endif
 
 public Q_SLOTS:
     void log(QxtLogger::LogLevel, const QList<QVariant>&);

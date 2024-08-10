@@ -130,12 +130,20 @@
 #include <QMutex>
 #include <QMutexLocker>
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+#include <QRecursiveMutex>
+#endif
+
 /*******************************************************************************
 Constructor for QxtLogger's private data
 *******************************************************************************/
 QxtLoggerPrivate::QxtLoggerPrivate()
 {
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
     mut_lock = new QMutex(QMutex::Recursive);
+#else 
+    mut_lock = new QRecursiveMutex();
+#endif
 }
 
 /*******************************************************************************

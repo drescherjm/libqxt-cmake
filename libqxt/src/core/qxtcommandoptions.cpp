@@ -900,7 +900,7 @@ void QxtCommandOptions::showUsage(bool showQtOptions, QTextStream& stream) const
             continue;
         }
         line = ' ' + names[i] + QString(maxNameLength - names[i].length() + 2, ' ');
-        foreach(const QString& word, descs[i].split(' ', QString::SkipEmptyParts))
+        foreach(const QString& word, descs[i].split(' ', Qt::SkipEmptyParts))
         {
             if (qxt_d().screenWidth > 0 && line.length() + word.length() >= qxt_d().screenWidth)
             {
