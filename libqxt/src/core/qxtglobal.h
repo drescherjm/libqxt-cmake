@@ -27,6 +27,18 @@
 #define QXTGLOBAL_H
 
 #include <QtGlobal>
+#include <QTextStream>
+
+// Version Compatibility
+// This part of the code was taken from: https://github.com/AD-Vega/qarv/issues/22#issuecomment-1012011346
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
+namespace Qt
+{
+    static auto flush = ::flush;
+	static auto endl = ::endl;
+	static auto SkipEmptyParts = QString::SkipEmptyParts;
+}
+#endif
 
 #define QXT_VERSION 0x000700
 #define QXT_VERSION_STR "0.7.0"
