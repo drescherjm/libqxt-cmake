@@ -114,7 +114,13 @@ QxtFifo::QxtFifo(QObject *parent) : QIODevice(parent)
 */
 qint64 QxtFifo::readData ( char * data, qint64 maxSize )
 {
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
     int bytes = qxt_d().available.load(), step;
+#else
+    int bytes = qxt_d().available.loadRelaxed(), step;
+#endif
+
     if(!bytes) return 0;
     if(bytes > maxSize) bytes = maxSize;
     int written = bytes;
@@ -130,9 +136,19 @@ qint64 QxtFifo::readData ( char * data, qint64 maxSize )
             node->content = node->content.right(rem);
         } else {
             memcpy(writePos, node->content.constData(), step);
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
             qxt_d().head.QXT_EXCHANGE(node->next.load());
+#else
+            qxt_d().head.QXT_EXCHANGE(node->next.loadRelaxed());
+#endif 
             delete node;
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
             node = qxt_d().head.load();
+#else
+            node = qxt_d().head.loadRelaxed();
+#endif
         }
         writePos += step;
         bytes -= step;
@@ -171,7 +187,11 @@ bool QxtFifo::isSequential () const
 */
 qint64 QxtFifo::bytesAvailable () const
 {
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
     return qxt_d().available.load();
+#else
+	return qxt_d().available.loadRelaxed();
+#endif
 }
 
 /*!
@@ -179,9 +199,20 @@ qint64 QxtFifo::bytesAvailable () const
 void QxtFifo::clear()
 {
     qxt_d().available.QXT_EXCHANGE(0);
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
     qxt_d().tail.QXT_EXCHANGE(qxt_d().head.load());
+#else
+	qxt_d().tail.QXT_EXCHANGE(qxt_d().head.loadRelaxed());
+#endif
+
     QxtFifoNode* node = qxt_d().head.loadAcquire()->next.QXT_EXCHANGE(NULL);
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
     while (node &&  node->next.load())
+#else
+	while (node && node->next.loadRelaxed())
+#endif
     {
         QxtFifoNode* next = node->next.QXT_EXCHANGE(NULL);
         delete node;

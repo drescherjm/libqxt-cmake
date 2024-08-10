@@ -24,6 +24,7 @@
  ****************************************************************************/
 #include "qxttemporarydir_p.h"
 
+#ifndef UNICODE
 #define UNICODE
 
 #include <qt_windows.h>

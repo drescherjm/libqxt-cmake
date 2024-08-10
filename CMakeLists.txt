@@ -24,14 +24,24 @@ endmacro()
 
 add_subdirectory( ${CMAKE_SOURCE_DIR}/libqxt/src/core/  ${CMAKE_BINARY_DIR}/qxt-core )
 
-add_subdirectory( ${CMAKE_SOURCE_DIR}/libqxt/src/gui/  ${CMAKE_BINARY_DIR}/qxt-gui )
-add_dependencies(QxtGui QxtCore)
+option (BUILD_QXT_GUI 	"Build QxtGui" OFF)
+if (BUILD_QXT_GUI)
+	add_subdirectory( ${CMAKE_SOURCE_DIR}/libqxt/src/gui/  ${CMAKE_BINARY_DIR}/qxt-gui )
+	add_dependencies(QxtGui QxtCore)
+endif()
 
-add_subdirectory( ${CMAKE_SOURCE_DIR}/libqxt/src/sql/  ${CMAKE_BINARY_DIR}/qxt-sql )
-add_dependencies(QxtSql QxtCore)
+option (BUILD_QXT_SQL 	"Build QxtSql" OFF)
 
-add_subdirectory( ${CMAKE_SOURCE_DIR}/libqxt/src/network/  ${CMAKE_BINARY_DIR}/qxt-network )
-add_dependencies(QxtNetwork QxtCore)
+if (BUILD_QXT_SQL)
+	add_subdirectory( ${CMAKE_SOURCE_DIR}/libqxt/src/sql/  ${CMAKE_BINARY_DIR}/qxt-sql )
+	add_dependencies(QxtSql QxtCore)
+endif()
+
+option (BUILD_QXT_NETWORK 	"Build QxtNetwork" OFF)
+if (BUILD_QXT_NETWORK)
+	add_subdirectory( ${CMAKE_SOURCE_DIR}/libqxt/src/network/  ${CMAKE_BINARY_DIR}/qxt-network )
+	add_dependencies(QxtNetwork QxtCore)
+endif()
 
 install(EXPORT ${PROJECT_NAME}Targets
         FILE ${PROJECT_NAME}.cmake
