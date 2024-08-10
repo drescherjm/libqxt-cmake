@@ -26,6 +26,7 @@
 
 #ifndef UNICODE
 #define UNICODE
+#endif 
 
 #include <qt_windows.h>
 

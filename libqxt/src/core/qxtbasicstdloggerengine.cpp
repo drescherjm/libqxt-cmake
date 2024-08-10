@@ -200,7 +200,7 @@ void QxtBasicSTDLoggerEngine::writeToStdErr(const QString &level, const QList<QV
         }
         count++;
     }
-    *errstream << endl;
+    *errstream << Qt::endl;
 }
 
 /*!
@@ -232,5 +232,5 @@ void QxtBasicSTDLoggerEngine::writeToStdOut(const QString& level, const QList<QV
         }
         count++;
     }
-    *outstream << endl;
+    *outstream << Qt::endl;
 }

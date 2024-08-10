@@ -25,6 +25,7 @@
 #include "qxtmodelserializer.h"
 #include <QAbstractItemModel>
 #include <QDataStream>
+#include <QIODevice>
 
 /*
     \class QxtModelSerializer
