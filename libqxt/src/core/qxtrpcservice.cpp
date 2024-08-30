@@ -236,7 +236,12 @@ int QxtRPCServiceIntrospector::qt_metacall(QMetaObject::Call _c, int _id, void *
     int ct = types.count();
     for(int i = 0; i < ct; i++) {
         // The qt_metacall implementation is expected to already know the data types in _a, so that's why we tracked it.
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         v[i] = QVariant(types.at(i), _a[i+1]);
+#else // QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+        v[i] = QVariant(QMetaType(types.at(i)), _a[i + 1]);
+#endif // QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     }
 
     foreach(const QString& rpcName, idToRpc.values(_id)) {
@@ -259,7 +264,7 @@ void QxtRPCServicePrivate::clientConnected(QIODevice* dev, quint64 id)
 {
     // QxtMetaObject::bind() is a nice piece of magic that allows parameters to a slot to be defined in the connection.
     QxtMetaObject::connect(dev, SIGNAL(readyRead()),
-                           QxtMetaObject::bind(this, SLOT(clientData(quint64)), Q_ARG(quint64, id)));
+                           QxtMetaObject::bind(this, SLOT(clientData(quint64)), QArgument<quint64>("quint64", id)) /*Q_ARG(quint64, id))*/);
 
     // Inform other objects that a new client has connected.
     emit qxt_p().clientConnected(id);
@@ -401,7 +406,7 @@ void QxtRPCServicePrivate::dispatchFromClient(quint64 id, const QString& fn, con
         // See dispatchFromServer() for a discussion of the safety of QXT_ARG here.
         if(qxt_rpcservice_debug) 
             qDebug() << "QxtRPCService: received" << fn << "- invoking" << slot.recv << slot.slot.constData() << slot.type << id << p0 << p1 << p2 << p3 << p4 << p5 << p6 << p7;
-        if(!QMetaObject::invokeMethod(slot.recv, slot.slot.constData(), slot.type, Q_ARG(quint64, id), QXT_ARG(0),
+        if(!QMetaObject::invokeMethod(slot.recv, slot.slot.constData(), slot.type, QArgument<quint64>("quint64", id) /*Q_ARG(quint64, id)*/, QXT_ARG(0),
                     QXT_ARG(1), QXT_ARG(2), QXT_ARG(3), QXT_ARG(4), QXT_ARG(5), QXT_ARG(6), QXT_ARG(7))) {
             qWarning() << "QxtRPCService: invokeMethod for " << slot.recv << "::" << slot.slot << " failed";
         }

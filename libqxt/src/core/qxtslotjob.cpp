@@ -174,15 +174,8 @@ This uses QxtSignalWaiter so it will _not_ block your current thread.
 
 QVariant QxtFuture::delayedResult(int msec)
 {
-    if (!waiter->wait(msec, false))
+    if (!waiter->wait(msec, QEventLoop::AllEvents /*false*/)) // false makes no sense here. I assume the original programmer meant QEventLoop::AllEvents which has a value of 0.
         return QVariant();
     return job->result();
 }
-
-
-
-
-
-
-
 

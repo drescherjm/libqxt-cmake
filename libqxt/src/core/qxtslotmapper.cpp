@@ -179,7 +179,12 @@ int QxtSlotMapper::qt_metacall(QMetaObject::Call call, int id, void** arguments)
     if (id < 0 || call != QMetaObject::InvokeMetaMethod)
         return id;
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QVariant param(id, arguments[1]);
+#else 
+    QVariant param(QMetaType(id), arguments[1]);
+#endif
+
     foreach (const QxtSlotMapInfo& info, qxt_d().mappings)
     {
         if (info.receiver && info.parameter == param)

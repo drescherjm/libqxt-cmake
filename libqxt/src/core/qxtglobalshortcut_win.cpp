@@ -25,7 +25,7 @@
 #include "qxtglobalshortcut_p.h"
 #include <qt_windows.h>
 
-
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 bool QxtGlobalShortcutPrivateNativeEventFilter::nativeEventFilter(const QByteArray &, void *message, long *)
 {
     MSG* msg = static_cast<MSG*>(message);
@@ -37,6 +37,19 @@ bool QxtGlobalShortcutPrivateNativeEventFilter::nativeEventFilter(const QByteArr
     }
     return false;
 }
+#else
+bool QxtGlobalShortcutPrivateNativeEventFilter::nativeEventFilter(const QByteArray&, void* message, qintptr*)
+{
+	MSG* msg = static_cast<MSG*>(message);
+	if (msg->message == WM_HOTKEY)
+	{
+		const quint32 keycode = HIWORD(msg->lParam);
+		const quint32 modifiers = LOWORD(msg->lParam);
+		activateShortcut(keycode, modifiers);
+	}
+	return false;
+}
+#endif 
 
 quint32 QxtGlobalShortcutPrivate::nativeModifiers(Qt::KeyboardModifiers modifiers)
 {

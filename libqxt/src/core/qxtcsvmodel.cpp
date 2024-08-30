@@ -172,12 +172,22 @@ QVariant QxtCsvModel::headerData(int section, Qt::Orientation orientation, int r
         return QAbstractTableModel::headerData(section, orientation, role);
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void QxtCsvModel::setSource(const QString filename, bool withHeader, QChar separator, QTextCodec* codec)
 {
     QFile src(filename);
     setSource(&src, withHeader, separator, codec);
 }
+#else  // QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+void QxtCsvModel::setSource(const QString filename, bool withHeader, QChar separator)
+{
+	QFile src(filename);
+	setSource(&src, withHeader, separator);
+}
+#endif // QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void QxtCsvModel::setSource(QIODevice *file, bool withHeader, QChar separator, QTextCodec* codec)
 {
     QxtCsvModelPrivate* d_ptr = &qxt_d();
@@ -264,6 +274,98 @@ void QxtCsvModel::setSource(QIODevice *file, bool withHeader, QChar separator, Q
     }
     file->close();
 }
+#else // QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+void QxtCsvModel::setSource(QIODevice* file, bool withHeader, QChar separator)
+{
+	QxtCsvModelPrivate* d_ptr = &qxt_d();
+	bool headerSet = !withHeader;
+	if (!file->isOpen())
+		file->open(QIODevice::ReadOnly);
+	if (withHeader)
+		d_ptr->maxColumn = 0;
+	else
+		d_ptr->maxColumn = d_ptr->header.size();
+	d_ptr->csvData.clear();
+	QStringList row;
+	QString field;
+	QChar quote;
+	QChar ch, buffer(0);
+	bool readCR = false;
+	QTextStream stream(file);
+	stream.setAutoDetectUnicode(true);
+
+	while (!stream.atEnd()) {
+		if (buffer != QChar(0)) {
+			ch = buffer;
+			buffer = QChar(0);
+		}
+		else {
+			stream >> ch;
+		}
+		if (ch == '\n' && readCR)
+			continue;
+		else if (ch == '\r')
+			readCR = true;
+		else
+			readCR = false;
+		if (ch.category() == QChar::Separator_Line || ch.category() == QChar::Separator_Paragraph || ch.category() == QChar::Other_Control) {
+			row << field;
+			field.clear();
+			if (!row.isEmpty()) {
+				if (!headerSet) {
+					d_ptr->header = row;
+					headerSet = true;
+				}
+				else {
+					d_ptr->csvData.append(row);
+				}
+				if (row.length() > d_ptr->maxColumn) {
+					d_ptr->maxColumn = row.length();
+				}
+			}
+			row.clear();
+		}
+		else if ((d_ptr->quoteMode & DoubleQuote && ch == '"') || (d_ptr->quoteMode & SingleQuote && ch == '\'')) {
+			quote = ch;
+			do {
+				stream >> ch;
+				if (ch == '\\' && d_ptr->quoteMode & BackslashEscape) {
+					stream >> ch;
+				}
+				else if (ch == quote) {
+					if (d_ptr->quoteMode & TwoQuoteEscape) {
+						stream >> buffer;
+						if (buffer == quote) {
+							buffer = QChar(0);
+							field.append(ch);
+							continue;
+						}
+					}
+					break;
+				}
+				field.append(ch);
+			} while (!stream.atEnd());
+		}
+		else if (ch == separator) {
+			row << field;
+			field.clear();
+		}
+		else {
+			field.append(ch);
+		}
+	}
+	if (!field.isEmpty())
+		row << field;
+	if (!row.isEmpty()) {
+		if (!headerSet)
+			d_ptr->header = row;
+		else
+			d_ptr->csvData.append(row);
+	}
+	file->close();
+}
+#endif 
+
 
 /*!
     \reimp
@@ -427,6 +529,7 @@ static QString qxt_addCsvQuotes(QxtCsvModel::QuoteMode mode, QString field)
     return field;
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void QxtCsvModel::toCSV(QIODevice* dest, bool withHeader, QChar separator, QTextCodec* codec)
 {
     QxtCsvModelPrivate& d_ptr = qxt_d();
@@ -461,12 +564,56 @@ void QxtCsvModel::toCSV(QIODevice* dest, bool withHeader, QChar separator, QText
     stream << Qt::flush;
     dest->close();
 }
+#else // QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+void QxtCsvModel::toCSV(QIODevice* dest, bool withHeader, QChar separator)
+{
+	QxtCsvModelPrivate& d_ptr = qxt_d();
+	int row, col, rows, cols;
+	rows = rowCount();
+	cols = columnCount();
+	QString data;
+	if (!dest->isOpen()) dest->open(QIODevice::WriteOnly | QIODevice::Truncate);
+	QTextStream stream(dest);
 
+	if (withHeader) {
+		data = "";
+		for (col = 0; col < cols; ++col) {
+			if (col > 0) data += separator;
+			data += qxt_addCsvQuotes(d_ptr.quoteMode, d_ptr.header.at(col));
+		}
+		stream << data << Qt::endl;
+	}
+	for (row = 0; row < rows; ++row)
+	{
+		const QStringList& rowData = d_ptr.csvData[row];
+		data = "";
+		for (col = 0; col < cols; ++col) {
+			if (col > 0) data += separator;
+			if (col < rowData.length())
+				data += qxt_addCsvQuotes(d_ptr.quoteMode, rowData.at(col));
+			else
+				data += qxt_addCsvQuotes(d_ptr.quoteMode, QString());;
+		}
+		stream << data << Qt::endl;
+	}
+	stream << Qt::flush;
+	dest->close();
+}
+#endif // QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void QxtCsvModel::toCSV(const QString filename, bool withHeader, QChar separator, QTextCodec* codec)
 {
     QFile dest(filename);
     toCSV(&dest, withHeader, separator, codec);
 }
+#else // QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+void QxtCsvModel::toCSV(const QString filename, bool withHeader, QChar separator)
+{
+	QFile dest(filename);
+	toCSV(&dest, withHeader, separator);
+}
+#endif // QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 
 /*!
     \reimp

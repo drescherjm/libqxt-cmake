@@ -29,6 +29,7 @@
 #include <QtGlobal>
 #include <QTextStream>
 #include <QVariant>
+#include <QMetaType>
 
 // Version Compatibility
 // This part of the code was taken from: https://github.com/AD-Vega/qarv/issues/22#issuecomment-1012011346
@@ -43,7 +44,10 @@ namespace Qt
 template <typename T>
 inline QVariant qVariantFromValue(const T& t)
 {
-	return QVariant(qMetaTypeId<T>(), &t, QTypeInfo<T>::isPointer);
+	//return QVariant(qMetaTypeId<T>(), &t, QTypeInfo<T>::isPointer);
+
+    return QVariant::fromValue(t);
+
 }
 #endif
 
