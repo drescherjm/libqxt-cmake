@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 3.20.0 FATAL_ERROR)
 project(libQxt)
 
+set (${PROJECT_NAME}_VERSION_MAJOR 7)
+set (${PROJECT_NAME}_VERSION_MINOR 0)
+set (${PROJECT_NAME}_VERSION_PATCH 0)
+set (${PROJECT_NAME}_VERSION_PATCH_CLEAN ${${PROJECT_NAME}_VERSION_PATCH})
+set (${PROJECT_NAME}_VERSION_STRING "${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_PATCH}")
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -17,6 +23,8 @@ SET (EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin CACHE INTERNAL "Single outpu
 SET (EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin CACHE INTERNAL "Single output directory for building all executables.")
 
 macro( setup_naming_convention TargetName )
+	#set_target_properties(${TargetName} "-${PROJECT_NAME}_VERSION_STRING}-r-${PROJECT_COMPILER_VERSION}${ARCH_SUFFIX}")
+	#set_target_properties(${TargetName} PROPERTIES RELEASE_POSTFIX "-${PROJECT_NAME}_VERSION_STRING}-r")
 	set_target_properties(${TargetName} PROPERTIES DEBUG_POSTFIX d)		
 	set_target_properties(${TargetName} PROPERTIES RELWITHDEBINFO_POSTFIX rd)	
 	set_target_properties(${TargetName} PROPERTIES MINSIZEREL_POSTFIX rms)
