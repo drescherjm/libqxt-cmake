@@ -4,6 +4,7 @@
 
 #include <QDialog>
 #include <QModelIndex>
+#include <QRegExp>
 #include "qxtglobal.h"
 #include "qxtpimpl.h"
 

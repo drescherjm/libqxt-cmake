@@ -1,7 +1,13 @@
 
 # Qxt Gui 
 
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Gui Widgets)
+set(LOCAL_TARGET_QT_MODULES Core Gui Widgets)
+
+if (${QT_VERSION_MAJOR} EQUAL "6") 
+	set(LOCAL_TARGET_QT_MODULES ${LOCAL_TARGET_QT_MODULES} Core5Compat)
+endif()
+
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS ${LOCAL_TARGET_QT_MODULES})
 
 set(QXT_MOD Gui)
 STRING(TOUPPER ${QXT_MOD} U_MOD)
@@ -15,7 +21,11 @@ target_compile_definitions(${LOCAL_TARGET_NAME} PRIVATE -DBUILD_QXT_${U_MOD})
 
 setup_naming_convention(${LOCAL_TARGET_NAME})
 		
-target_link_libraries(${LOCAL_TARGET_NAME}  PUBLIC Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Gui Qt${QT_VERSION_MAJOR}::Widgets QxtCore)	
+foreach(module IN LISTS LOCAL_TARGET_QT_MODULES)
+    target_link_libraries(${LOCAL_TARGET_NAME} PUBLIC Qt${QT_VERSION_MAJOR}::${module})
+endforeach()
+
+target_link_libraries(${LOCAL_TARGET_NAME} PUBLIC QxtCore)
 
 target_include_directories(${LOCAL_TARGET_NAME} PUBLIC
 	$<INSTALL_INTERFACE:Include> 

@@ -29,6 +29,7 @@
 #include <QIcon>
 #include <QLocale>
 #include <QApplication>
+#include <algorithm>
 
 class QxtCountry;
 typedef QList<QxtCountry> QxtCountryList;
@@ -77,7 +78,10 @@ public:
             _smCountryNames.push_back(QxtCountry(c));
         }
 
-        qSort(_smCountryNames);
+        //qSort(_smCountryNames);
+
+        std::sort(_smCountryNames.begin(), _smCountryNames.end());
+
         return _smCountryNames;
     }
 

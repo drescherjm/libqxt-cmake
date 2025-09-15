@@ -7,10 +7,7 @@ if (${QT_VERSION_MAJOR} EQUAL "6")
 	set(LOCAL_TARGET_QT_MODULES ${LOCAL_TARGET_QT_MODULES} Core5Compat)
 endif()
 
-
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS ${LOCAL_TARGET_QT_MODULES})
-
-
 
 set(QXT_MOD Core)
 STRING(TOUPPER ${QXT_MOD} U_MOD)
@@ -33,7 +30,7 @@ target_include_directories(${LOCAL_TARGET_NAME} PUBLIC
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
 
-install (TARGETS ${LOCAL_TARGET_NAME} DESTINATION lib
+install (TARGETS ${LOCAL_TARGET_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR}
         EXPORT ${PROJECT_NAME}Targets
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -48,5 +45,5 @@ list(FILTER qxt_headers EXCLUDE REGEX "^.+_p\.h$")
 #message(FATAL_ERROR qxt_headers=${qxt_headers})
 
 file(GLOB qxt_extra_headers ${PROJECT_SOURCE_DIR}/libqxt/include/QxtCore/*)
-install (FILES ${qxt_headers} ${qxt_extra_headers} DESTINATION Include)
+install (FILES ${qxt_headers} ${qxt_extra_headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 

@@ -14,6 +14,7 @@
 #include <QApplication>
 #include <QKeyEvent>
 #include "qxtgroupbox.h"
+#include "qxtQtCompatFilterUtils.h"
 
 
 QxtFilterDialogPrivate::QxtFilterDialogPrivate()    :   QObject(0),
@@ -32,12 +33,7 @@ QxtFilterDialogPrivate::QxtFilterDialogPrivate()    :   QObject(0),
 
 void QxtFilterDialogPrivate::createRegExpPattern(const QString &rawText)
 {
-
-    QRegExp regExp(rawText,caseSensitivity,syntax);
-    if(regExp.isValid())
-        proxyModel->setFilterRegExp(regExp);
-    else
-        proxyModel->setFilterRegExp(QString());
+    qxtQtCompatFilterUtils::setProxyFilterRegExp(proxyModel, rawText, caseSensitivity, syntax);
 }
 
 void QxtFilterDialogPrivate::updateFilterPattern()

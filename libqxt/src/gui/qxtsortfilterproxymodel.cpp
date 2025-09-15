@@ -67,7 +67,11 @@ bool QxtModelFilterPrivate::acceptsValue ( const QVariant & value )
         QString filterText = m_value.toString();
         QString modelText  = value.toString();
         switch (matchType){
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
             case Qt::MatchRegExp:
+#else
+            case Qt::MatchRegularExpression:
+#endif // QT_VERSION < QT_VERSION_CHECK(6,0,0)
                 if (QRegExp(filterText, cs).exactMatch(modelText))
                     return true;
                 break;
