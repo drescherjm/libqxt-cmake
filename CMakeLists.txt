@@ -17,6 +17,8 @@ include(QtCommon)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
 
+include(GNUInstallDirs)
+
 if (QT_DIR AND NOT Qt${QT_VERSION_MAJOR}_DIR)
 	set(Qt${QT_VERSION_MAJOR}_DIR ${QT_DIR} CACHE PATH "Qt directory" FORCE)
 endif()
@@ -35,7 +37,7 @@ endmacro()
 
 add_subdirectory( ${CMAKE_SOURCE_DIR}/libqxt/src/core/  ${CMAKE_BINARY_DIR}/qxt-core )
 
-option (BUILD_QXT_GUI 	"Build QxtGui" OFF)
+option (BUILD_QXT_GUI 	"Build QxtGui" ON)
 if (BUILD_QXT_GUI)
 	add_subdirectory( ${CMAKE_SOURCE_DIR}/libqxt/src/gui/  ${CMAKE_BINARY_DIR}/qxt-gui )
 	add_dependencies(QxtGui QxtCore)
@@ -55,7 +57,7 @@ if (BUILD_QXT_NETWORK)
 endif()
 
 install(EXPORT ${PROJECT_NAME}Targets
-        FILE ${PROJECT_NAME}.cmake
+        FILE ${PROJECT_NAME}Config.cmake
         NAMESPACE Qxt::
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/cmake/libqxt
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/cmake/libqxt
 )
