@@ -102,6 +102,7 @@ void QxtSpanSliderPrivate::handleMousePress(const QPoint& pos, QStyle::SubContro
         p->update(sr);
 }
 
+#if 0
 void QxtSpanSliderPrivate::setupPainter(QPainter* painter, Qt::Orientation orientation, qreal x1, qreal y1, qreal x2, qreal y2) const
 {
     QColor highlight = qxt_p().palette().color(QPalette::Highlight);
@@ -115,6 +116,36 @@ void QxtSpanSliderPrivate::setupPainter(QPainter* painter, Qt::Orientation orien
     else
         painter->setPen(QPen(highlight.dark(150), 0));
 }
+#endif 
+
+void QxtSpanSliderPrivate::setupPainter(QPainter* painter, Qt::Orientation orientation, qreal x1, qreal y1, qreal x2, qreal y2) const
+{
+    QColor highlight = qxt_p().palette().color(QPalette::Highlight);
+    QLinearGradient gradient(x1, y1, x2, y2);
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    gradient.setColorAt(0, highlight.darker(1.2));   // 120%
+    gradient.setColorAt(1, highlight.lighter(1.08)); // 108%
+#else
+    gradient.setColorAt(0, highlight.dark(120));
+    gradient.setColorAt(1, highlight.light(108));
+#endif
+
+    painter->setBrush(gradient);
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    if (orientation == Qt::Horizontal)
+        painter->setPen(QPen(highlight.darker(1.3), 0)); // 130%
+    else
+        painter->setPen(QPen(highlight.darker(1.5), 0)); // 150%
+#else
+    if (orientation == Qt::Horizontal)
+        painter->setPen(QPen(highlight.dark(130), 0));
+    else
+        painter->setPen(QPen(highlight.dark(150), 0));
+#endif
+}
+
 
 void QxtSpanSliderPrivate::drawSpan(QStylePainter* painter, const QRect& rect) const
 {
@@ -130,7 +161,15 @@ void QxtSpanSliderPrivate::drawSpan(QStylePainter* painter, const QRect& rect) c
         groove.adjust(0, 0, 0, -1);
 
     // pen & brush
-    painter->setPen(QPen(p->palette().color(QPalette::Dark).light(110), 0));
+    //painter->setPen(QPen(p->palette().color(QPalette::Dark).light(110), 0));
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    QColor grooveColor = p->palette().color(QPalette::Dark).lighter(1.1);
+#else
+    QColor grooveColor = p->palette().color(QPalette::Dark).light(110);
+#endif
+    painter->setPen(QPen(grooveColor, 0));
+
     if (opt.orientation == Qt::Horizontal)
         setupPainter(painter, opt.orientation, groove.center().x(), groove.top(), groove.center().x(), groove.bottom());
     else
