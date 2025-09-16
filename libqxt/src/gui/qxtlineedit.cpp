@@ -107,8 +107,10 @@ void QxtLineEdit::paintEvent(QPaintEvent* event)
 		QRect r = style()->subElementRect(QStyle::SE_LineEditContents, &option, this);
 
 		int left, top, right, bottom;
-		getTextMargins(&left, &top, &right, &bottom);
-		r.adjust(left + hMargin, top + vMargin, -right - hMargin, -bottom - vMargin);
+
+		QMargins margins = textMargins();
+		r.adjust(margins.left() + hMargin, margins.top() + vMargin,
+			-margins.right() - hMargin, -margins.bottom() - vMargin);
 
 		QPainter painter(this);
 		QPalette pal = palette();

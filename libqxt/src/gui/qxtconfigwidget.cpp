@@ -40,15 +40,37 @@ QxtConfigTableWidget::QxtConfigTableWidget(QWidget* parent) : QTableWidget(paren
     viewport()->setAttribute(Qt::WA_Hover, true);
 }
 
+// QxtConfigTableWidget.cpp (snippet)
+#include <QStyleOptionViewItem>
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+
 QStyleOptionViewItem QxtConfigTableWidget::viewOptions() const
 {
-    QStyleOptionViewItem option = QTableWidget::viewOptions();
-    option.displayAlignment = Qt::AlignHCenter | Qt::AlignTop;
-    option.decorationAlignment = Qt::AlignHCenter | Qt::AlignTop;
-    option.decorationPosition = QStyleOptionViewItem::Top;
-    option.showDecorationSelected = false;
-    return option;
+	QStyleOptionViewItem option = QTableWidget::viewOptions();
+	option.displayAlignment = Qt::AlignHCenter | Qt::AlignTop;
+
+	option.decorationAlignment = Qt::AlignHCenter | Qt::AlignTop;
+	option.decorationPosition = QStyleOptionViewItem::Top;
+	option.showDecorationSelected = false;
+	return option;
 }
+
+#else // Qt6+
+
+void QxtConfigTableWidget::initViewItemOption(QStyleOptionViewItem* option) const
+{
+	// let the base class initialize the option first
+	QTableWidget::initViewItemOption(option);
+
+	// set what remains in Qt6:
+	option->displayAlignment = Qt::AlignHCenter | Qt::AlignTop;
+
+	// NOTE: decorationAlignment/decorationPosition/showDecorationSelected
+	// were removed in Qt6 — if you relied on them you must implement
+	// equivalent behavior in a custom delegate (paint/layout) instead.
+}
+#endif
 
 QSize QxtConfigTableWidget::sizeHint() const
 {
@@ -422,10 +444,7 @@ int QxtConfigWidget::insertPage(int index, QWidget* page, const QIcon& icon, con
         qxt_d().table->resizeColumnToContents(0);
 		
 		qxt_d().table->setFixedWidth( qxt_d().table->sizeHint().width() + 10 );
-
-		
-
-		
+	
     }
     qxt_d().table->updateGeometry();
     return index;

@@ -173,7 +173,11 @@ void QxtItemDelegatePrivate::timerEvent(QTimerEvent* event)
 {
     if (event->timerId() == updateTimer.timerId())
     {
-        QMutableHashIterator<QWidget*, QPersistentModelIndex> it(updatedItems);
+        // Replace this line:
+        // QMutableHashIterator<QWidget*, QPersistentModelIndex> it(updatedItems);
+
+        // With this line:
+        QMutableMultiHashIterator<QWidget*, QPersistentModelIndex> it(updatedItems);
         while (it.hasNext())
         {
             it.next();

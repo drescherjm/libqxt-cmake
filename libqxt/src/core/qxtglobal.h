@@ -192,7 +192,7 @@ protected:
     }
 
 private:
-    PUB* qxt_p_ptr;
+    PUB* qxt_p_ptr=nullptr;
 };
 
 template <typename PUB, typename PVT>

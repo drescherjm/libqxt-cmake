@@ -37,7 +37,16 @@ class QxtConfigTableWidget : public QTableWidget
 {
 public:
     QxtConfigTableWidget(QWidget* parent = 0);
-    QStyleOptionViewItem viewOptions() const;
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+protected:
+	QStyleOptionViewItem viewOptions() const override;
+#else
+protected:
+	void initViewItemOption(QStyleOptionViewItem* option) const override;
+#endif
+
+public:
     QSize sizeHint() const;
 
     bool hasHoverEffect() const;
