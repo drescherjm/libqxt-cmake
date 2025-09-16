@@ -25,7 +25,7 @@
 #include "qxtprogresslabel.h"
 #include <QProgressBar>
 #include <QBasicTimer>
-#include <QTime>
+#include <QElapsedTimer>
 
 class QxtProgressLabelPrivate : public QxtPrivate<QxtProgressLabel>
 {
@@ -33,7 +33,7 @@ public:
     QXT_DECLARE_PUBLIC(QxtProgressLabel)
     QxtProgressLabelPrivate();
 
-    QTime start;
+    QElapsedTimer start;
     int interval;
     int cachedMin;
     int cachedMax;
