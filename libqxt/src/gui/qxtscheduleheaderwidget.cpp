@@ -30,6 +30,7 @@
 #include <QDateTime>
 #include <QDate>
 #include <QTime>
+#include <QPalette>
 
 
 /*!
@@ -47,6 +48,18 @@ QxtScheduleHeaderWidget::QxtScheduleHeaderWidget(Qt::Orientation orientation , Q
         model->setDataSource(parent);
     }
 }
+
+/*
+static QBrush getBackgroundBrush(const QPalette& palette) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    // For Qt6, use window() instead of background()
+    return palette.window();
+#else
+    // For Qt5, use background()
+    return palette.background();
+#endif
+}
+*/
 
 void QxtScheduleHeaderWidget::paintSection(QPainter * painter, const QRect & rect, int logicalIndex) const
 {
@@ -67,7 +80,7 @@ void QxtScheduleHeaderWidget::paintSection(QPainter * painter, const QRect & rec
                 QRect temp = rect;
                 temp.adjust(1, 1, -1, -1);
 
-                painter->fillRect(rect, this->palette().background());
+                painter->fillRect(rect, this->palette().window()); // this->palette().background() in older versions of Qt.
 
                 if (time.minute() == 0)
                 {

@@ -27,6 +27,7 @@
 #include "qxtlanguagecombobox_p.h"
 #include <QDir>
 #include <QApplication>
+#include <algorithm>
 
 class Language;
 typedef QList<Language> LanguageList;
@@ -92,7 +93,9 @@ public:
                 _smAllLanguages.push_back(Language(l));
             }
 
-            qSort(_smAllLanguages);
+            //qSort(_smAllLanguages);
+            std::sort(_smAllLanguages.begin(), _smAllLanguages.end());
+
         }
         return _smAllLanguages;
     };
@@ -109,7 +112,10 @@ public:
                 continue;
             trLanguages.push_back(Language(locale.language()));
         }
-        qSort(trLanguages);
+
+
+        //qSort(trLanguages); // Replace with std::sort below
+        std::sort(trLanguages.begin(), trLanguages.end());
         return trLanguages;
     };
 
