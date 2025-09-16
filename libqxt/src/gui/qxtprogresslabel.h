@@ -39,8 +39,8 @@ class QXT_GUI_EXPORT QxtProgressLabel : public QLabel
     Q_PROPERTY(int updateInterval READ updateInterval WRITE setUpdateInterval)
 
 public:
-    explicit QxtProgressLabel(QWidget* parent = 0, Qt::WindowFlags flags = 0);
-    explicit QxtProgressLabel(const QString& text, QWidget* parent = 0, Qt::WindowFlags flags = 0);
+    explicit QxtProgressLabel(QWidget* parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags{});
+    explicit QxtProgressLabel(const QString& text, QWidget* parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags{});
     virtual ~QxtProgressLabel();
 
     QString contentFormat() const;

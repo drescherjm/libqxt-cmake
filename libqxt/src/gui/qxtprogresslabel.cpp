@@ -26,6 +26,7 @@
 #include <QProgressBar>
 #include <QBasicTimer>
 #include <QElapsedTimer>
+#include <QTime>
 
 class QxtProgressLabelPrivate : public QxtPrivate<QxtProgressLabel>
 {

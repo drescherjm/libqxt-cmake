@@ -38,8 +38,8 @@ class QXT_GUI_EXPORT QxtConfigDialog : public QDialog
     QXT_DECLARE_PRIVATE(QxtConfigDialog)
 
 public:
-    explicit QxtConfigDialog(QWidget* parent = 0, Qt::WindowFlags flags = 0);
-    explicit QxtConfigDialog(QxtConfigWidget::IconPosition position, QWidget* parent = 0, Qt::WindowFlags flags = 0);
+    explicit QxtConfigDialog(QWidget* parent = 0, Qt::WindowFlags flags = Qt::WindowFlags{});
+    explicit QxtConfigDialog(QxtConfigWidget::IconPosition position, QWidget* parent = 0, Qt::WindowFlags flags = Qt::WindowFlags{});
     virtual ~QxtConfigDialog();
 
     QDialogButtonBox* dialogButtonBox() const;

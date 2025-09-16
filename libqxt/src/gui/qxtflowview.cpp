@@ -429,34 +429,30 @@ void QxtFlowView::resizeEvent(QResizeEvent* event)
 void QxtFlowView::wheelEvent(QWheelEvent * event)
 {
 
-    if (event->orientation() == Qt::Horizontal)
+    if (event->angleDelta().x() != 0)
     {
         event->ignore();
     }
     else
     {
-        int numSteps = -((event->delta() / 8) / 15);
-
-
+        int numSteps = -((event->angleDelta().y() / 8) / 15);
 
         if (numSteps > 0)
         {
-            for (int i = 0;i < numSteps;i++)
+            for (int i = 0; i < numSteps; i++)
             {
                 showNext();
             }
         }
         else
         {
-            for (int i = numSteps;i < 0;i++)
+            for (int i = numSteps; i < 0; i++)
             {
                 showPrevious();
             }
         }
         event->accept();
     }
-
-
 }
 
 /*! \internal */

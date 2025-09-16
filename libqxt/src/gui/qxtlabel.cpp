@@ -28,6 +28,7 @@
 #include <QPainter>
 #include <QFontMetrics>
 #include <QApplication>
+#include <QElapsedTimer>
 
 static const int Vertical_Mask = 0x02;
 
@@ -39,7 +40,7 @@ public:
     void init(const QString& txt = QString());
     void updateLabel();
 
-    QTime time;
+    QElapsedTimer time;
     QString text;
     Qt::Alignment align;
     Qt::TextElideMode mode;
@@ -240,7 +241,11 @@ void QxtLabel::setRotation(Qxt::Rotation rotation)
 QSize QxtLabel::sizeHint() const
 {
     const QFontMetrics& fm = fontMetrics();
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    QSize size(fm.horizontalAdvance(qxt_d().text), fm.height());
+#else
     QSize size(fm.width(qxt_d().text), fm.height());
+#endif
     if (qxt_d().rot & Vertical_Mask)
         size.transpose();
     return size;
@@ -258,7 +263,11 @@ QSize QxtLabel::minimumSizeHint() const
     default:
     {
         const QFontMetrics& fm = fontMetrics();
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        QSize size(fm.horizontalAdvance("..."), fm.height());
+#else
         QSize size(fm.width("..."), fm.height());
+#endif
         if (qxt_d().rot & Vertical_Mask)
             size.transpose();
         return size;

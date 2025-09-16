@@ -83,7 +83,7 @@ void QxtConfigDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
             painter->fillRect(opt.rect, option.palette.brush(cg, QPalette::Highlight));
         else if ((option.state & QStyle::State_MouseOver) && (option.state & QStyle::State_Enabled))
         {
-            QColor color = option.palette.color(cg, QPalette::Highlight).light();
+            QColor color = option.palette.color(cg, QPalette::Highlight).lighter();
             if (color == option.palette.color(cg, QPalette::Base))
                 color = option.palette.color(cg, QPalette::AlternateBase);
             painter->fillRect(opt.rect, color);
@@ -101,8 +101,14 @@ void QxtConfigDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
 QSize QxtConfigDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     int margin = qApp->style()->pixelMetric(QStyle::PM_FocusFrameHMargin) + 1;
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    int textWidth = option.fontMetrics.horizontalAdvance(index.data().toString());
+#else
     int textWidth = option.fontMetrics.width(index.data().toString());
-    int width = qMax(textWidth, option.decorationSize.width()) + 2 * margin;
+#endif
+
+    int width = qMax(textWidth, option.decorationSize.width()) + 2 * margin;    
     int height = option.fontMetrics.height() + option.decorationSize.height() + margin;
     return QSize(width, height);
 }

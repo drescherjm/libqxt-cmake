@@ -48,8 +48,8 @@ class QXT_GUI_EXPORT QxtConfigWidget : public QWidget
 public:
     enum IconPosition { North, West, East };
 
-    explicit QxtConfigWidget(QWidget* parent = 0, Qt::WindowFlags flags = 0);
-    explicit QxtConfigWidget(QxtConfigWidget::IconPosition position, QWidget* parent = 0, Qt::WindowFlags flags = 0);
+    explicit QxtConfigWidget(QWidget* parent = 0, Qt::WindowFlags flags = Qt::WindowFlags{});
+    explicit QxtConfigWidget(QxtConfigWidget::IconPosition position, QWidget* parent = 0, Qt::WindowFlags flags = Qt::WindowFlags{});
     virtual ~QxtConfigWidget();
 
     bool hasHoverEffect() const;
