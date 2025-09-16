@@ -23,7 +23,7 @@
  **
  ****************************************************************************/
 #include "qxtlineedit.h"
-#include <QStyleOptionFrameV2>
+#include <QStyleOptionFrame>
 #include <QPainter>
 #include <QStyle>
 
@@ -97,25 +97,30 @@ void QxtLineEdit::setSampleText(const QString& text)
 */
 void QxtLineEdit::paintEvent(QPaintEvent* event)
 {
-    QLineEdit::paintEvent(event);
-    if (displayText().isEmpty() && !hasFocus())
-    {
-        QStyleOptionFrameV2 option;
-        initStyleOption(&option);
+	QLineEdit::paintEvent(event);
 
+	if (text().isEmpty() && !hasFocus())
+	{
+		QStyleOptionFrame option;
+		initStyleOption(&option);
 
-        QRect r = style()->subElementRect(QStyle::SE_LineEditContents, &option, this);
-#if QT_VERSION >= 0x040500
-        // TODO: sort out prior Qt 4.5
-        int left, top, right, bottom;
-        getTextMargins(&left, &top, &right, &bottom);
-        r.adjust(left, top, -right, -bottom);
-#endif // QT_VERSION >= 0x040500
-        r.adjust(hMargin, vMargin, -hMargin, -vMargin);
+		QRect r = style()->subElementRect(QStyle::SE_LineEditContents, &option, this);
 
-        QPainter painter(this);
-        QPalette pal = palette();
-        pal.setCurrentColorGroup(QPalette::Disabled);
-        style()->drawItemText(&painter, r, alignment(), pal, false, qxt_d().sampleText, QPalette::Text);
-    }
+		int left, top, right, bottom;
+		getTextMargins(&left, &top, &right, &bottom);
+		r.adjust(left + hMargin, top + vMargin, -right - hMargin, -bottom - vMargin);
+
+		QPainter painter(this);
+		QPalette pal = palette();
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+		QColor placeholderColor = pal.color(QPalette::PlaceholderText);
+#else
+		pal.setCurrentColorGroup(QPalette::Disabled);
+		QColor placeholderColor = pal.color(QPalette::Text);
+#endif
+
+		painter.setPen(placeholderColor);
+		painter.drawText(r, alignment(), qxt_d().sampleText);
+	}
 }

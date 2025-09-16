@@ -31,6 +31,8 @@
 #include <QPainter>
 #include <QTimer>
 
+#include "qxt_qt_compat.h"
+
 static const int TOP_LEVEL_EXTENT = 2;
 
 QxtItemDelegatePrivate::QxtItemDelegatePrivate() :
@@ -427,16 +429,14 @@ void QxtItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& optio
  */
 void QxtItemDelegate::drawDisplay(QPainter* painter, const QStyleOptionViewItem& option, const QRect& rect, const QString& text) const
 {
-    if (!Qt::mightBeRichText(text))
-    {
-        QItemDelegate::drawDisplay(painter, option, rect, text);
-        return;
-    }
+	if (!QxtCompat::mightBeRichText(text)) {
+		QItemDelegate::drawDisplay(painter, option, rect, text);
+		return;
+	}
 
     QString key = QString(QLatin1String("QxtItemDelegate:%1")).arg(text);
     QPixmap pixmap;
-    if (!QPixmapCache::find(key, pixmap))
-    {
+    if (!QxtCompat::findPixmap(key, pixmap)) {
         if (!qxt_d().document)
             qxt_d().document = new QTextDocument(const_cast<QxtItemDelegate*>(this));
         qxt_d().document->setHtml(text);
