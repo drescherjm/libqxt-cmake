@@ -72,8 +72,16 @@ QxtScheduleView::QxtScheduleView(QWidget *parent)
     /*standart values are 15 minutes per cell and 69 rows == 1 Day*/
     qxt_d().m_currentZoomDepth = 15 * 60;
     qxt_d().m_currentViewMode  = DayView;
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    qxt_d().m_startUnixTime = QDateTime(QDate::currentDate(), QTime(0, 0, 0)).toSecsSinceEpoch();
+    qxt_d().m_endUnixTime = QDateTime(QDate::currentDate().addDays(6), QTime(23, 59, 59)).toSecsSinceEpoch();
+#else
+
     qxt_d().m_startUnixTime    = QDateTime(QDate::currentDate(),QTime(0, 0, 0)).toTime_t();
-    qxt_d().m_endUnixTime      = QDateTime(QDate::currentDate().addDays(6),QTime(23, 59, 59)).toTime_t();
+    qxt_d().m_endUnixTime      = .toTime_t();
+#endif
+
     qxt_d().delegate = qxt_d().defaultDelegate = new QxtScheduleItemDelegate(this);
 
 #if 0
@@ -644,6 +652,9 @@ void QxtScheduleView::mouseReleaseEvent(QMouseEvent * /*e*/)
     }
 }
 
+
+// Old code
+#if 0
 void QxtScheduleView::wheelEvent(QWheelEvent  * e)
 {
     /*time scrolling when pressing ctrl while using the mouse wheel*/
@@ -658,6 +669,32 @@ void QxtScheduleView::wheelEvent(QWheelEvent  * e)
     else
         QAbstractScrollArea::wheelEvent(e);
 }
+#endif
+
+// Code compatible with both Qt5 and Qt6
+void QxtScheduleView::wheelEvent(QWheelEvent* e)
+{
+    /* Time scrolling when pressing ctrl while using the mouse wheel */
+    if (e->modifiers() & Qt::ControlModifier)
+    {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        if (e->angleDelta().y() < 0) // Use angleDelta in Qt6
+            zoomOut();
+        else
+            zoomIn();
+#else
+        if (e->delta() < 0) // Use delta in Qt5
+            zoomOut();
+        else
+            zoomIn();
+#endif
+    }
+    else
+    {
+        QAbstractScrollArea::wheelEvent(e);
+    }
+}
+
 
 /*!
  *  returns the current row count of the view
@@ -938,10 +975,15 @@ void QxtScheduleView::setTimeRange(const QDateTime & fromDateTime, const QDateTi
 
     //adjust the timeranges to fit in the view
     adjustRangeToViewMode(&startTime, &endTime);
+ 
+    //qxt_d().m_startUnixTime = startTime.toTime_t();
+    //qxt_d().m_endUnixTime = endTime.toTime_t();
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    qxt_d().m_startUnixTime = startTime.toSecsSinceEpoch();
+    qxt_d().m_endUnixTime = endTime.toSecsSinceEpoch();
+#else
     qxt_d().m_startUnixTime = startTime.toTime_t();
     qxt_d().m_endUnixTime = endTime.toTime_t();
+#endif
 }
-
-
-
-

@@ -29,6 +29,15 @@
 #include <QDateTime>
 #include <QDebug>
 
+static QDateTime getTimeFromOffset(int iTableOffset, const QxtScheduleViewPrivate & pv) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    return QDateTime::fromSecsSinceEpoch(pv.offsetToUnixTime(iTableOffset)); // Qt6
+#else
+    return QDateTime::fromTime_t(pv.offsetToUnixTime(iTableOffset)); // Qt5
+#endif
+}
+
+
 QxtScheduleViewHeaderModel::QxtScheduleViewHeaderModel(QObject *parent) : QAbstractTableModel(parent)
         , m_rowCountBuffer(0)
         , m_colCountBuffer(0)
@@ -189,13 +198,19 @@ QVariant QxtScheduleViewHeaderModel::headerData(int section, Qt::Orientation ori
         if (Qt::Horizontal == orientation)
         {
             int iTableOffset = m_dataSource->qxt_d().visualIndexToOffset(0, section);
-            QDateTime startTime = QDateTime::fromTime_t(m_dataSource->qxt_d().offsetToUnixTime(iTableOffset));
+
+            //QDateTime startTime = QDateTime::fromTime_t(m_dataSource->qxt_d().offsetToUnixTime(iTableOffset));
+            QDateTime startTime = getTimeFromOffset(iTableOffset, m_dataSource->qxt_d());
+
             return QVariant(startTime.date().toString());
         }
         else
         {
             int iTableOffset = m_dataSource->qxt_d().visualIndexToOffset(section, 0);
-            QTime time = QDateTime::fromTime_t(m_dataSource->qxt_d().offsetToUnixTime(iTableOffset)).time();
+
+            //QTime time = QDateTime::fromTime_t(m_dataSource->qxt_d().offsetToUnixTime(iTableOffset)).time();
+            QTime time = getTimeFromOffset(iTableOffset, m_dataSource->qxt_d()).time();
+
             return QVariant(time.toString());
         }
     }

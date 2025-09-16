@@ -188,7 +188,8 @@ QList< QLinkedList<QxtScheduleInternalItem *> > QxtScheduleViewPrivate::findConc
     if(m_Items.size() == 0)
         return allConcurrentItems;
     
-    qSort(allItemsSorted.begin(), allItemsSorted.end(), qxtScheduleItemLessThan);
+    //qSort(allItemsSorted.begin(), allItemsSorted.end(), qxtScheduleItemLessThan);
+    std::sort(allItemsSorted.begin(), allItemsSorted.end(), qxtScheduleItemLessThan);
 
     int startItem = 0;
     int endItem = allItemsSorted.size() - 1;

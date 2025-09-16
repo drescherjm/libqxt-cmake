@@ -184,8 +184,14 @@ void QxtScheduleItemDelegate::paintItemHeader(QPainter *painter, const QRect rec
     if (!converted)
         return;
 
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    QDateTime startTime = QDateTime::fromSecsSinceEpoch(startUnixTime);
+    QDateTime endTime = QDateTime::fromSecsSinceEpoch(startUnixTime + duration);
+#else
     QDateTime startTime = QDateTime::fromTime_t(startUnixTime);
     QDateTime endTime = QDateTime::fromTime_t(startUnixTime + duration);
+#endif
 
     if (!startTime.isValid() || !endTime.isValid())
         return;

@@ -54,7 +54,9 @@ void QxtTreeWidgetPrivate::informFinishEditing(const QModelIndex& index)
 void QxtTreeWidgetPrivate::expandCollapse(QTreeWidgetItem* item)
 {
     if (item && !item->parent() && delegate()->decorationStyle() != Qxt::NoDecoration)
-        qxt_p().setItemExpanded(item, !qxt_p().isItemExpanded(item));
+
+        // qxt_p().setItemExpanded(item, !qxt_p().isItemExpanded(item));
+        item->setExpanded(!item->isExpanded());
 }
 
 /*!

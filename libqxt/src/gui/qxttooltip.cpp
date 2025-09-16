@@ -25,7 +25,11 @@
 #include "qxttooltip.h"
 #include "qxttooltip_p.h"
 #include <QStyleOptionFrame>
+
+#if QT_VERSION_MAJOR < 6
 #include <QDesktopWidget>
+#endif 
+
 #include <QStylePainter>
 #include <QApplication>
 #include <QVBoxLayout>
@@ -49,6 +53,26 @@ QxtToolTipPrivate* QxtToolTipPrivate::instance()
     return self;
 }
 
+QxtToolTipPrivate::QxtToolTipPrivate()
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    : QWidget(nullptr, FLAGS) // No desktop widget in Qt6
+#else
+    : QWidget(qApp->desktop(), FLAGS)
+#endif
+{
+    setWindowFlags(FLAGS);
+    vbox = new QVBoxLayout(this);
+    setPalette(QToolTip::palette());
+    setWindowOpacity(style()->styleHint(QStyle::SH_ToolTipLabel_Opacity, nullptr, this) / 255.0);
+
+    //layout()->setMargin(style()->pixelMetric(QStyle::PM_ToolTipLabelFrameWidth, nullptr, this)); // Port below!
+    int margin = style()->pixelMetric(QStyle::PM_ToolTipLabelFrameWidth, nullptr, this);
+    layout()->setContentsMargins(margin, margin, margin, margin);
+
+    qApp->installEventFilter(this);
+}
+
+#if 0
 QxtToolTipPrivate::QxtToolTipPrivate() : QWidget(qApp->desktop(), FLAGS)
 {
     setWindowFlags(FLAGS);
@@ -58,6 +82,9 @@ QxtToolTipPrivate::QxtToolTipPrivate() : QWidget(qApp->desktop(), FLAGS)
     layout()->setMargin(style()->pixelMetric(QStyle::PM_ToolTipLabelFrameWidth, 0, this));
     qApp->installEventFilter(this);
 }
+#endif
+
+
 
 QxtToolTipPrivate::~QxtToolTipPrivate()
 {
@@ -65,6 +92,7 @@ QxtToolTipPrivate::~QxtToolTipPrivate()
     self = 0;
 }
 
+#if 0
 void QxtToolTipPrivate::show(const QPoint& pos, QWidget* tooltip, QWidget* parent, const QRect& rect)
 {
     Q_ASSERT(tooltip && parent);
@@ -84,6 +112,43 @@ void QxtToolTipPrivate::show(const QPoint& pos, QWidget* tooltip, QWidget* paren
         QWidget::show();
     }
 }
+#endif
+
+void QxtToolTipPrivate::show(const QPoint& pos, QWidget* tooltip, QWidget* parent, const QRect& rect)
+{
+    Q_ASSERT(tooltip && parent);
+    if (!isVisible())
+    {
+        int scr = 0;
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        QList<QScreen*> screens = QGuiApplication::screens();
+        // Find the screen that contains the point
+        for (int i = 0; i < screens.size(); ++i) {
+            if (screens[i]->geometry().contains(pos)) {
+                scr = i;
+                break;
+            }
+        }
+        QScreen* screen = (scr >= 0 && scr < screens.size()) ? screens[scr] : QGuiApplication::primaryScreen();
+        setParent(nullptr); // No screen widget in Qt6
+#else
+        if (QApplication::desktop()->isVirtualDesktop())
+            scr = QApplication::desktop()->screenNumber(pos);
+        else
+            scr = QApplication::desktop()->screenNumber(this);
+        setParent(QApplication::desktop()->screen(scr));
+#endif
+
+        setWindowFlags(FLAGS);
+        setToolTip(tooltip);
+        currentParent = parent;
+        currentRect = rect;
+        move(calculatePos(scr, pos));
+        QWidget::show();
+    }
+}
+
 
 void QxtToolTipPrivate::setToolTip(QWidget* tooltip)
 {
@@ -179,6 +244,7 @@ void QxtToolTipPrivate::hideLater()
         QTimer::singleShot(0, this, SLOT(hide()));
 }
 
+#if 0
 QPoint QxtToolTipPrivate::calculatePos(int scr, const QPoint& eventPos) const
 {
 #ifdef Q_WS_MAC
@@ -210,6 +276,49 @@ QPoint QxtToolTipPrivate::calculatePos(int scr, const QPoint& eventPos) const
         p.setY(screen.y() + screen.height() - s.height());
     return p;
 }
+#endif 
+
+QPoint QxtToolTipPrivate::calculatePos(int scr, const QPoint& eventPos) const
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    QList<QScreen*> screens = QGuiApplication::screens();
+    QRect screen = (scr >= 0 && scr < screens.size())
+        ? screens[scr]->geometry()
+        : QGuiApplication::primaryScreen()->geometry();
+#else
+#ifdef Q_WS_MAC
+    QRect screen = QApplication::desktop()->availableGeometry(scr);
+#else
+    QRect screen = QApplication::desktop()->screenGeometry(scr);
+#endif
+#endif
+
+    QPoint p = eventPos;
+    p += QPoint(2,
+#ifdef Q_WS_WIN
+        24
+#else
+        16
+#endif
+    );
+
+    QSize s = sizeHint();
+    if (p.x() + s.width() > screen.x() + screen.width())
+        p.rx() -= 4 + s.width();
+    if (p.y() + s.height() > screen.y() + screen.height())
+        p.ry() -= 24 + s.height();
+    if (p.y() < screen.y())
+        p.setY(screen.y());
+    if (p.x() + s.width() > screen.x() + screen.width())
+        p.setX(screen.x() + screen.width() - s.width());
+    if (p.x() < screen.x())
+        p.setX(screen.x());
+    if (p.y() + s.height() > screen.y() + screen.height())
+        p.setY(screen.y() + screen.height() - s.height());
+
+    return p;
+}
+
 
 /*!
     \class QxtToolTip
@@ -338,10 +447,23 @@ void QxtToolTip::setToolTipRect(QWidget* parent, const QRect& rect)
 
     \sa setMargin()
 */
+#if 0
 int QxtToolTip::margin()
 {
     return QxtToolTipPrivate::instance()->layout()->margin();
 }
+#endif 
+
+int QxtToolTip::margin()
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    QMargins margins = QxtToolTipPrivate::instance()->layout()->contentsMargins();
+    return margins.left(); // Assuming uniform margins
+#else
+    return QxtToolTipPrivate::instance()->layout()->margin();
+#endif
+}
+
 
 /*!
     Sets the \a margin of the tooltip.
@@ -352,7 +474,8 @@ int QxtToolTip::margin()
 */
 void QxtToolTip::setMargin(int margin)
 {
-    QxtToolTipPrivate::instance()->layout()->setMargin(margin);
+    //QxtToolTipPrivate::instance()->layout()->setMargin(margin);
+    QxtToolTipPrivate::instance()->layout()->setContentsMargins(margin,margin,margin,margin);
 }
 
 /*!
