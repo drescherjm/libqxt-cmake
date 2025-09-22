@@ -33,12 +33,12 @@ target_include_directories(${LOCAL_TARGET_NAME} PUBLIC
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../core>
 )
 
-install (TARGETS ${LOCAL_TARGET_NAME} DESTINATION lib
-        EXPORT ${PROJECT_NAME}Targets
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+install(TARGETS ${LOCAL_TARGET_NAME}
+    EXPORT ${PROJECT_NAME}Targets
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
 #message(STATUS qxt_headers=${qxt_headers})
@@ -48,7 +48,7 @@ list(FILTER qxt_headers EXCLUDE REGEX "^.+_p\.h$")
 #message(FATAL_ERROR qxt_headers=${qxt_headers})
 
 file(GLOB qxt_extra_headers ${PROJECT_SOURCE_DIR}/libqxt/include/Qxt${QXT_MOD}/*)
-install (FILES ${qxt_headers} ${qxt_extra_headers} DESTINATION Include)
+install (FILES ${qxt_headers} ${qxt_extra_headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 		
 		

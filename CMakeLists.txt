@@ -56,8 +56,29 @@ if (BUILD_QXT_NETWORK)
 	add_dependencies(QxtNetwork QxtCore)
 endif()
 
+#########################################################################################
+# This section is essential for the dependent library targets to be properly exported
+# for vcpkg to consume the library target(s) for this project.
+
+include(CMakePackageConfigHelpers)
+
+# Export all targets
 install(EXPORT ${PROJECT_NAME}Targets
-        FILE ${PROJECT_NAME}Config.cmake
-        NAMESPACE Qxt::
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/cmake/libqxt
+    FILE ${PROJECT_NAME}Targets.cmake
+    NAMESPACE Qxt:: # Give each library a namespace which will create an alias library
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 )
+
+# Generate and install the Config file
+configure_package_config_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+)
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+)
+
+#########################################################################################
