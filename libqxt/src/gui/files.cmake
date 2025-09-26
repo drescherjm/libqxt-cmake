@@ -123,10 +123,11 @@ if(WIN32)
 endif(WIN32)
 
 if(UNIX)
-	set(qxt_headers ${qxt_headers}
-		qxtserialdevice.h
-		qxtserialdevice_p.h
-	)
+# Disable this for now. These files are not in this folder.
+#	set(qxt_headers ${qxt_headers}
+#		qxtserialdevice.h
+#		qxtserialdevice_p.h
+#	)
 	
 	set(qxt_sources ${qxt_sources}
 		
