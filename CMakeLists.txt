@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20.0 FATAL_ERROR)
 
-include(CMake/SupportSwitchingQtVersionAsAFeature.cmake)
+include(cmake/SupportSwitchingQtVersionAsAFeature.cmake)
 
 project(libQxt)
 
@@ -80,5 +80,6 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 )
+
 
 #########################################################################################
