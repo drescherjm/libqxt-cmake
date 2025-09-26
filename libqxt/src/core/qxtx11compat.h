@@ -3,7 +3,6 @@
 
 // This file was generated with the help of Microsoft Copilot. 
 
-#include <QtGlobal>
 #include <X11/Xlib.h>
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
