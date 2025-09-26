@@ -23,8 +23,8 @@
  **
  ****************************************************************************/
 #include "qxtglobalshortcut_p.h"
-#include <QX11Info>
 #include "qxtx11compat.h"
+#include <X11/Xlib.h>
 
 static int (*original_x_errhandler)(Display* display, XErrorEvent* event);
 
@@ -114,4 +114,5 @@ bool QxtGlobalShortcutPrivate::unregisterShortcut(quint32 nativeKey, quint32 nat
     XSetErrorHandler(original_x_errhandler);
     return !error;
 }
+
 
