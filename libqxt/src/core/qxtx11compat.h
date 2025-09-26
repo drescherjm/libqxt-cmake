@@ -1,6 +1,8 @@
 #ifndef QXTX11COMPAT_H
 #define QXTX11COMPAT_H
 
+// This file was generated with the help of Microsoft Copilot. 
+
 #include <QtGlobal>
 #include <X11/Xlib.h>
 
