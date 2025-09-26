@@ -2,20 +2,30 @@
 #define QXTX11COMPAT_H
 
 #include <QtGlobal>
+#include <X11/Xlib.h>
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     #include <QGuiApplication>
-    #include <QPlatformNativeInterface>
+    #include <QString>
 #else
     #include <QX11Info>
 #endif
 
-#include <X11/Xlib.h>
+inline bool qxtIsWayland() {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    return QGuiApplication::platformName().startsWith("wayland", Qt::CaseInsensitive);
+#else
+    return false;
+#endif
+}
 
 inline Display* qxtX11Display() {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    return static_cast<Display*>(
-        QGuiApplication::platformNativeInterface()->nativeResourceForWindow("display", nullptr));
+    if (qxtIsWayland()) {
+        return nullptr; // Wayland doesn't expose X11 Display
+    }
+    auto* native = QGuiApplication::nativeInterface();
+    return static_cast<Display*>(native->nativeResourceForWindow("display", nullptr));
 #else
     return QX11Info::display();
 #endif
@@ -23,11 +33,15 @@ inline Display* qxtX11Display() {
 
 inline Window qxtX11RootWindow() {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    return static_cast<Window>(
-        QGuiApplication::platformNativeInterface()->nativeResourceForWindow("rootwindow", nullptr));
+    if (qxtIsWayland()) {
+        return 0; // No root window in Wayland
+    }
+    auto* native = QGuiApplication::nativeInterface();
+    return static_cast<Window>(native->nativeResourceForWindow("rootwindow", nullptr));
 #else
     return QX11Info::appRootWindow();
 #endif
 }
 
 #endif // QXTX11COMPAT_H
+
