@@ -148,7 +148,7 @@ if(UNIX)
 		# # QMAKE_LFLAGS += -framework Carbon -framework CoreFoundation
 	else(APPLE)
 		set(qxt_sources ${qxt_sources}
-	#		qxtglobalshortcut_x11.cpp
+			qxtglobalshortcut_x11.cpp
 		)
 	endif(APPLE)
 	
