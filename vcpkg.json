@@ -13,6 +13,10 @@
               "features": [
                 "qt5"
               ]
+          },
+          {
+              "name": "qt5-x11extras",
+              "platform": "linux"
           }
       ]
     },

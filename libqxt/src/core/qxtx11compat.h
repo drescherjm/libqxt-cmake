@@ -10,6 +10,7 @@
     #include <X11/Xlib.h>
 #else
     #include <QX11Info>
+    #include <X11/Xlib.h>
 #endif
 
 inline bool qxtIsWayland() {

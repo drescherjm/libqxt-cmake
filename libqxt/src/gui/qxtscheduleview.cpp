@@ -77,9 +77,8 @@ QxtScheduleView::QxtScheduleView(QWidget *parent)
     qxt_d().m_startUnixTime = QDateTime(QDate::currentDate(), QTime(0, 0, 0)).toSecsSinceEpoch();
     qxt_d().m_endUnixTime = QDateTime(QDate::currentDate().addDays(6), QTime(23, 59, 59)).toSecsSinceEpoch();
 #else
-
     qxt_d().m_startUnixTime    = QDateTime(QDate::currentDate(),QTime(0, 0, 0)).toTime_t();
-    qxt_d().m_endUnixTime      = .toTime_t();
+    qxt_d().m_endUnixTime      = QDateTime(QDate::currentDate().addDays(6),QTime(23, 59, 59)).toTime_t();
 #endif
 
     qxt_d().delegate = qxt_d().defaultDelegate = new QxtScheduleItemDelegate(this);
