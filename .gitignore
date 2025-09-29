@@ -56,3 +56,6 @@ install_manifest.txt
 output.txt
 qt.conf
 CPack*.cmake
+CMakePresets.json
+CMakeUserPresets.json
+*.VC.db

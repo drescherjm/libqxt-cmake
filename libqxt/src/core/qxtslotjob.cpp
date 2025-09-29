@@ -102,7 +102,9 @@ QxtFuture QxtSlotJob::exec(QThread *thread)
 
 void QxtSlotJob::run()
 {
-    qxt_d().r = qVariantFromValue(qxt_d().f->invoke());
+    //qxt_d().r = qVariantFromValue(qxt_d().f->invoke());
+    
+    qxt_d().r = QVariant::fromValue(qxt_d().f->invoke());
     qxt_d().receiver->moveToThread(qxt_d().orginalthread);
 }
 
