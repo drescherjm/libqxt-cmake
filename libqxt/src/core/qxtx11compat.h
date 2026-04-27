@@ -1,3 +1,4 @@
+#pragma once
 #ifndef QXTX11COMPAT_H
 #define QXTX11COMPAT_H
 
@@ -5,11 +6,11 @@
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     #include <QGuiApplication>
-    #include <QString>
-    #include <QScreen>
+    #include <QDebug>
     #include <X11/Xlib.h>
 #else
     #include <QX11Info>
+    #include <X11/Xlib.h>
 #endif
 
 inline bool qxtIsWayland() {
@@ -23,10 +24,16 @@ inline bool qxtIsWayland() {
 inline Display* qxtX11Display() {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     if (qxtIsWayland()) {
+        qWarning() << "Wayland detected — X11 access not available.";
         return nullptr; // Wayland doesn't expose X11 Display
     }
-    auto* native = qGuiApp->nativeInterface<QNativeInterface::QX11Application>();
-    return native->display();
+    #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+        auto* native = qGuiApp->nativeInterface<QNativeInterface::QX11Application>();
+        return native->display();
+    #else
+        qWarning() << "Qt 6.0 to 6.4 is not supported.";
+        return nullptr;
+    #endif
 #else
     return QX11Info::display();
 #endif
@@ -37,29 +44,20 @@ inline Window qxtX11RootWindow() {
     if (qxtIsWayland()) {
         return 0; // No root window in Wayland
     }
-    auto* native = qGuiApp->nativeInterface<QNativeInterface::QX11Application>();
+    #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+        auto* x11App = qGuiApp->nativeInterface<QNativeInterface::QX11Application>();
+        if (!x11App)
+            return 0;
 
-    Display* dpy = native->display();
+        Display* display = x11App->display();
+        if (!display)
+            return 0;
 
-
-    // Get the primary screen (or any QScreen you want)
-    QScreen* screen = QGuiApplication::primaryScreen();
-    if (!screen) {
+        return RootWindow(display, DefaultScreen(display));
+    #else
+        qWarning() << "Qt 6.0 to 6.4 is not supported.";
         return 0;
-    }
-
-
-    QPlatformNativeInterface  = screen->pla
-
-    auto x11Screen = screen->nativeInterface<QNativeInterface::QX11Screen>();
-    if (!x11Screen) {
-        return 0;
-    }
-
-    int screenNumber = x11Screen->screen();
-
-    return RootWindow(dpy,screenNumber);
-
+    #endif
 #else
     return QX11Info::appRootWindow();
 #endif

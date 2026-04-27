@@ -28,7 +28,7 @@ endforeach()
 target_link_libraries(${LOCAL_TARGET_NAME} PUBLIC QxtCore)
 
 target_include_directories(${LOCAL_TARGET_NAME} PUBLIC
-	$<INSTALL_INTERFACE:Include> 
+	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${LOCAL_TARGET_NAME}>
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../core>
 )
@@ -48,7 +48,7 @@ list(FILTER qxt_headers EXCLUDE REGEX "^.+_p\.h$")
 #message(FATAL_ERROR qxt_headers=${qxt_headers})
 
 file(GLOB qxt_extra_headers ${PROJECT_SOURCE_DIR}/libqxt/include/Qxt${QXT_MOD}/*)
-install (FILES ${qxt_headers} ${qxt_extra_headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install (FILES ${qxt_headers} ${qxt_extra_headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${LOCAL_TARGET_NAME})
 
 		
 		

@@ -30,17 +30,20 @@
 #include <QTextStream>
 #include <QVariant>
 #include <QMetaType>
+#include <iostream>
+#include <functional>
+#include <future>
 
 // Version Compatibility
 // This part of the code was taken from: https://github.com/AD-Vega/qarv/issues/22#issuecomment-1012011346
 #if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
 namespace Qt
 {
-    static auto flush = ::flush;
-	static auto endl = ::endl;
-	static auto SkipEmptyParts = QString::SkipEmptyParts;
+    using SplitBehavior = QString::SplitBehavior;
+    const SplitBehavior SkipEmptyParts = SplitBehavior::SkipEmptyParts;
+    const auto endl = ::endl;
 }
-#else
+#elif QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 template <typename T>
 inline QVariant qVariantFromValue(const T& t)
 {

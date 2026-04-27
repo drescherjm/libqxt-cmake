@@ -5,6 +5,8 @@ set(LOCAL_TARGET_QT_MODULES Core Gui)
 
 if (${QT_VERSION_MAJOR} EQUAL "6") 
 	set(LOCAL_TARGET_QT_MODULES ${LOCAL_TARGET_QT_MODULES} Core5Compat)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(LOCAL_TARGET_QT_MODULES ${LOCAL_TARGET_QT_MODULES} X11Extras)
 endif()
 
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS ${LOCAL_TARGET_QT_MODULES})
@@ -28,7 +30,7 @@ foreach(module IN LISTS LOCAL_TARGET_QT_MODULES)
 endforeach()	
 
 target_include_directories(${LOCAL_TARGET_NAME} PUBLIC
-	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}> 
+	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${LOCAL_TARGET_NAME}>
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
 
@@ -47,5 +49,5 @@ list(FILTER qxt_headers EXCLUDE REGEX "^.+_p\.h$")
 #message(FATAL_ERROR qxt_headers=${qxt_headers})
 
 file(GLOB qxt_extra_headers ${PROJECT_SOURCE_DIR}/libqxt/include/QxtCore/*)
-install (FILES ${qxt_headers} ${qxt_extra_headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install (FILES ${qxt_headers} ${qxt_extra_headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${LOCAL_TARGET_NAME})
 

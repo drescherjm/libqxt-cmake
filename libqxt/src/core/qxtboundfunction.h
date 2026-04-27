@@ -32,7 +32,10 @@
 #include <qxtmetaobject.h>
 #include <qxtnull.h>
 #include <QThread>
+#include <functional>
+#include <future>
 #include <QtDebug>
+
 
 /*!
 \class QxtBoundFunction

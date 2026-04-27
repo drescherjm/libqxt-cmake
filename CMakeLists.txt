@@ -35,6 +35,11 @@ macro( setup_naming_convention TargetName )
 	set_target_properties(${TargetName} PROPERTIES MINSIZEREL_POSTFIX rms)
 endmacro()
 
+if (${QT_VERSION_MAJOR} EQUAL "5") 
+    set(CMAKE_CXX_STANDARD 17)
+    set(CMAKE_CXX_STANDARD_REQUIRED True)
+endif()
+
 add_subdirectory( ${CMAKE_SOURCE_DIR}/libqxt/src/core/  ${CMAKE_BINARY_DIR}/qxt-core )
 
 option (BUILD_QXT_GUI 	"Build QxtGui" ON)
