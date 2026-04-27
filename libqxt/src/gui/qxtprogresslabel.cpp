@@ -208,41 +208,79 @@ void QxtProgressLabel::restart()
     refresh();
 }
 
+
+static QString formatDuration(int totalSeconds, const QString& tformat)
+{
+	if (totalSeconds < 0)
+		totalSeconds = 0;
+
+	int days = totalSeconds / 86400;
+	int hours = (totalSeconds % 86400) / 3600;
+	int minutes = (totalSeconds % 3600) / 60;
+	int seconds = totalSeconds % 60;
+
+	// If a day-aware format is requested, handle %d as a days token
+	// before falling through to QTime for the time portion.
+	// Supported tformat tokens: "dd hh:mm:ss", "hh:mm:ss", "mm:ss"
+	if (days > 0 || tformat.contains("dd"))
+	{
+		// Build a human-readable string that always shows days when non-zero
+		if (tformat.contains("dd"))
+		{
+			// User explicitly asked for the dd token — honour the full format
+			QString result = tformat;
+			result.replace("dd", QString::number(days));
+			result.replace("hh", QString("%1").arg(hours, 2, 10, QChar('0')));
+			result.replace("mm", QString("%1").arg(minutes, 2, 10, QChar('0')));
+			result.replace("ss", QString("%1").arg(seconds, 2, 10, QChar('0')));
+			return result;
+		}
+		else
+		{
+			// Overflow: prepend the day count automatically
+			QTime t(hours, minutes, seconds);
+			return QString("%1d %2").arg(days).arg(t.toString(tformat));
+		}
+	}
+
+	// Under 24 hours — delegate to QTime exactly as the original code did
+	QTime t(0, 0);
+	t = t.addSecs(totalSeconds);
+	return t.toString(tformat);
+}
+
 /*!
     Refreshes the content.
  */
 void QxtProgressLabel::refresh()
 {
-    // elapsed
-    qreal elapsed = 0;
-    if (qxt_d().start.isValid())
-        elapsed = qxt_d().start.elapsed() / 1000.0;
-    QTime etime(0, 0);
-    etime = etime.addSecs(static_cast<int>(elapsed));
+	// elapsed
+	qreal elapsed = 0;
+	if (qxt_d().start.isValid())
+		elapsed = qxt_d().start.elapsed() / 1000.0;
 
-    // percentage
-    qreal percent = 0;
-    if (qxt_d().cachedMax != 0)
-        percent = (qxt_d().cachedVal - qxt_d().cachedMin) / static_cast<qreal>(qxt_d().cachedMax);
-    qreal total = 0;
-    if (percent != 0)
-        total = elapsed / percent;
+	// percentage
+	qreal percent = 0;
+	if (qxt_d().cachedMax != 0)
+		percent = (qxt_d().cachedVal - qxt_d().cachedMin) / static_cast<qreal>(qxt_d().cachedMax);
+	qreal total = 0;
+	if (percent != 0)
+		total = elapsed / percent;
 
-    // remaining
-    QTime rtime(0, 0);
-    rtime = rtime.addSecs(static_cast<int>(total - elapsed));
+	// remaining
+	qreal remaining = total - elapsed;
 
-    // format
-    QString tformat = qxt_d().tformat;
-    if (tformat.isEmpty())
-        tformat = tr("mm:ss");
-    QString cformat = qxt_d().cformat;
-    if (cformat.isEmpty())
-        cformat = tr("ETA: %r");
+	// format
+	QString tformat = qxt_d().tformat;
+	if (tformat.isEmpty())
+		tformat = tr("mm:ss");
+	QString cformat = qxt_d().cformat;
+	if (cformat.isEmpty())
+		cformat = tr("ETA: %r");
 
-    QString result = QString(cformat).replace("%e", etime.toString(tformat));
-    result = result.replace("%r", rtime.toString(tformat));
-    setText(result);
+	QString result = QString(cformat).replace("%e", formatDuration(static_cast<int>(elapsed), tformat));
+	result = result.replace("%r", formatDuration(static_cast<int>(remaining), tformat));
+	setText(result);
 }
 
 /*!
